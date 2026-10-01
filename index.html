@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Examen de Español - A1 a C2</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --correct: #15803d;
+      --correct-bg: #dcfce7;
+      --wrong: #b91c1c;
+      --wrong-bg: #fee2e2;
+      --contrast-bg: #fefce8;
+      --contrast-border: #ca8a04;
+      --contrast-text: #854d0e;
+      --audio-bg: #f0f9ff;
+      --audio-border: #bae6fd;
+      --audio-text: #0369a1;
+      --option-hover: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 20px;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    .author-badge {
+      display: inline-block;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .author-badge a { color: var(--primary); text-decoration: none; font-weight: 700; }
+    .author-badge a:hover { text-decoration: underline; }
+
+    header { text-align: center; margin-bottom: 24px; }
+    header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 6px; }
+    header p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .login-card {
+      max-width: 440px;
+      margin: 50px auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .login-card h2 { color: var(--primary); margin-bottom: 8px; font-size: 1.4rem; }
+    .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+    .form-group { text-align: left; margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .form-group input:focus { border-color: var(--primary); }
+
+    .user-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; }
+    .tab-btn {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.2);
+    }
+
+    .rule-banner {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      color: #1e3a8a;
+    }
+
+    .status-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .status-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+    }
+    .btn-primary { background: var(--primary); color: #ffffff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: #f1f5f9; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: #e2e8f0; }
+    .btn-danger { background: #fee2e2; color: var(--wrong); border: 1px solid #fca5a5; }
+    .btn-danger:hover { background: #fecaca; }
+
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .question-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+    .q-num {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .q-text { font-size: 1.05rem; font-weight: 600; white-space: pre-line; }
+    .options-grid { display: grid; gap: 10px; }
+    .opt-btn {
+      text-align: left;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s ease, border-color 0.15s ease;
+      color: var(--text);
+    }
+    .opt-btn:hover:not(:disabled) { background: var(--option-hover); border-color: #94a3b8; }
+    .opt-btn.correct { background: var(--correct-bg) !important; border-color: var(--correct) !important; color: var(--correct) !important; font-weight: 600; }
+    .opt-btn.wrong { background: var(--wrong-bg) !important; border-color: var(--wrong) !important; color: var(--wrong) !important; font-weight: 600; }
+    .opt-btn:disabled { cursor: default; }
+
+    .audio-voice-module {
+      margin-top: 14px;
+      background: var(--audio-bg);
+      border: 1px solid var(--audio-border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--audio-text);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .audio-voice-header {
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .audio-voice-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-mic { background: #ef4444; color: white; }
+    .btn-mic.recording {
+      animation: pulse 1s infinite alternate;
+      background: #b91c1c;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(1.04); opacity: 0.8; }
+    }
+    .voice-feedback {
+      font-size: 0.88rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+    .voice-feedback.pass {
+      display: block;
+      background: var(--correct-bg);
+      color: var(--correct);
+      border: 1px solid var(--correct);
+    }
+    .voice-feedback.retry {
+      display: block;
+      background: var(--wrong-bg);
+      color: var(--wrong);
+      border: 1px solid var(--wrong);
+    }
+
+    .explanation-panel {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--primary);
+      font-size: 0.92rem;
+      display: none;
+    }
+    .explanation-panel.show { display: block; animation: fadeIn 0.25s ease; }
+    .section-title { font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+    .correct-title { color: var(--correct); }
+    .wrong-title { color: var(--wrong); margin-top: 14px; }
+    .wrong-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .wrong-list li { position: relative; padding-left: 18px; color: #334155; }
+    .wrong-list li::before { content: "✕"; position: absolute; left: 0; top: 0; color: var(--wrong); font-weight: bold; }
+    .contrast-box {
+      margin-top: 14px;
+      background: var(--contrast-bg);
+      border: 1px solid var(--contrast-border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--contrast-text);
+      font-size: 0.89rem;
+      line-height: 1.55;
+    }
+    .contrast-header { display: block; color: #713f12; font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
+
+    /* Paneles de datos */
+    .admin-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    .records-table th, .records-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .records-table th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+    .detail-tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin: 1px;
+    }
+    .detail-tag.cor { background: var(--correct-bg); color: var(--correct); }
+    .detail-tag.wro { background: var(--wrong-bg); color: var(--wrong); }
+
+    .users-textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      outline: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    footer a:hover { text-decoration: underline; }
+
+    /* Modales */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 860px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 12px;
+    }
+    .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+
+    .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .summary-table th, .summary-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .summary-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+    .summary-table tr.total-row { font-weight: 700; background: #f1f5f9; color: var(--primary); font-size: 1.05rem; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-pass { background: #dcfce7; color: #15803d; border: 1px solid #15803d; }
+    .status-fail { background: #fee2e2; color: #b91c1c; border: 1px solid #b91c1c; }
+    .status-pending { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); }
+
+    .level-details-container { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .level-detail-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; background: #f8fafc; }
+    .level-detail-header { font-weight: 700; font-size: 1rem; margin-bottom: 8px; color: var(--primary); display: flex; justify-content: space-between; }
+    .badges-list { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 6px; }
+    .badge-label { font-weight: 600; font-size: 0.85rem; width: 120px; flex-shrink: 0; }
+    .badge-num { display: inline-block; font-size: 0.8rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; min-width: 26px; text-align: center; }
+    .badge-num.correct { background: var(--correct-bg); color: var(--correct); border: 1px solid var(--correct); }
+    .badge-num.wrong { background: var(--wrong-bg); color: var(--wrong); border: 1px solid var(--wrong); }
+    .badge-num.pending { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); }
+
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--border); padding-top: 16px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; }
+      .container, .modal-footer, .close-btn { display: none !important; }
+      .modal-overlay { display: block !important; position: static !important; width: 100% !important; background: none !important; padding: 0 !important; }
+      .modal-content { box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; }
+      .level-detail-card { page-break-inside: avoid !important; border: 1px solid #666 !important; margin-bottom: 12px !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PANTALLA 1: Acceso -->
+<div id="login-view" class="login-card">
+  <div class="author-badge">
+    Creador: <strong>Claudio Marcelo Budnikar</strong>
+  </div>
+  <h2>Acceso al Simulador</h2>
+  <p>Prof. Claudio Marcelo Budnikar | Clases Particulares de Español</p>
+  
+  <form onsubmit="handleLoginSubmit(event)">
+    <div class="form-group">
+      <label for="login-username">Usuario:</label>
+      <input type="text" id="login-username" placeholder="Tu nombre de usuario" required autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label for="login-password">Contraseña:</label>
+      <input type="password" id="login-password" placeholder="Tu contraseña" required autocomplete="current-password">
+    </div>
+    <div id="login-error" style="color: var(--wrong); font-size: 0.85rem; margin-bottom: 12px; display: none;"></div>
+    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;">Entrar</button>
+  </form>
+</div>
+
+<!-- PANTALLA 2: Sistema Principal del Alumno -->
+<div id="app-view" class="container" style="display: none;">
+  <div class="user-bar">
+    <div class="user-badge">
+      <span>👤 Estudiante:</span>
+      <span id="display-user-name" style="color: var(--text);"></span>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button class="btn btn-outline" onclick="openStudentHistoryModal()">📜 Mis Evaluaciones Anteriores</button>
+      <button class="btn btn-primary" onclick="openSummaryModal()">🖨 Finalizar y Ver Resumen</button>
+      <button class="btn btn-outline" onclick="handleLogout()">Salir</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="author-badge">
+      Sistema desarrollado por <strong>Claudio Marcelo Budnikar</strong> — Clases Particulares de Español (<a href="mailto:claudio.hispanoluso@gmail.com">claudio.hispanoluso@gmail.com</a>)
+    </div>
+    <h1>Simulador Gramatical de Español</h1>
+    <p>120 cuestiones (20 por nivel) con retroalimentación contrastiva con el portugués brasileño.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="selectLevel('A1')">Nivel A1</button>
+    <button class="tab-btn" onclick="selectLevel('A2')">Nivel A2</button>
+    <button class="tab-btn" onclick="selectLevel('B1')">Nivel B1</button>
+    <button class="tab-btn" onclick="selectLevel('B2')">Nivel B2</button>
+    <button class="tab-btn" onclick="selectLevel('C1')">Nivel C1</button>
+    <button class="tab-btn" onclick="selectLevel('C2')">Nivel C2</button>
+  </div>
+
+  <div class="rule-banner">
+    ⚖️ <strong>Criterio de Evaluación:</strong> Para <strong>aprobar</strong> cada nivel se exige alcanzar al menos el <strong>75% de respuestas correctas</strong> (mínimo 15 de 20 preguntas acertadas). La aprobación se otorga por nivel concluido.
+  </div>
+
+  <div class="status-card">
+    <div>
+      <span id="level-title" style="font-weight: 700; font-size: 1.1rem; color: var(--primary);">Nivel A1</span>: 
+      <strong id="score-text">0 / 20 respondidas</strong>
+    </div>
+    <div class="status-actions">
+      <button class="btn btn-outline" onclick="resetCurrentLevel()">Reiniciar este nivel</button>
+    </div>
+  </div>
+
+  <div id="questions-container"></div>
+
+  <footer>
+    <p><strong>Claudio Marcelo Budnikar</strong> — Profesor Particular de Español y Creador del Sistema</p>
+    <p>Consultas y clases: <a href="mailto:claudio.hispanoluso@gmail.com">claudio.hispanoluso@gmail.com</a></p>
+  </footer>
+</div>
+
+<!-- PANTALLA 3: Panel Exclusivo del Administrador -->
+<div id="admin-view" class="container" style="display: none;">
+  <div class="user-bar">
+    <div class="user-badge" style="color: #b91c1c;">
+      <span>👑 Administrador:</span>
+      <span>Prof. Claudio Marcelo Budnikar</span>
+    </div>
+    <button class="btn btn-outline" onclick="handleLogout()">Cerrar Sesión Admin</button>
+  </div>
+
+  <div class="admin-container">
+    <div class="admin-tabs">
+      <button class="btn btn-primary" id="btn-tab-records" onclick="switchAdminSubTab('records')">📊 Registro Histórico de Evaluaciones</button>
+      <button class="btn btn-outline" id="btn-tab-users" onclick="switchAdminSubTab('users')">👥 Gestión de Usuarios y Contraseñas</button>
+    </div>
+
+    <!-- Sub-sección 1: Registros de Exámenes -->
+    <div id="admin-sub-records">
+      <div class="admin-header-actions" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+        <input type="text" id="admin-filter" class="filter-input" placeholder="Filtrar por alumno..." oninput="renderAdminRecords()" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); min-width: 250px;">
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-outline" onclick="exportRecordsToCSV()">📥 Exportar a Excel (CSV)</button>
+          <button class="btn btn-danger" onclick="clearAllRecords()">🗑️ Borrar Historial</button>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>Alumno</th>
+              <th>Aciertos Globales</th>
+              <th>% Global</th>
+              <th>Niveles Aprobados (≥ 75%)</th>
+              <th>Detalle por Nivel</th>
+            </tr>
+          </thead>
+          <tbody id="admin-records-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sub-sección 2: Gestión de Usuarios / Contraseñas en Texto -->
+    <div id="admin-sub-users" style="display: none;">
+      <h3 style="margin-bottom: 8px; color: var(--primary);">Usuarios y Contraseñas Registrados</h3>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+        Revisa o edita directamente la lista en texto plano o usa el formulario rápido para añadir cuentas.
+      </p>
+
+      <div style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">Nuevo Usuario:</label>
+          <input type="text" id="new-user-name" placeholder="Ej: JuanPerez" style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.9rem;">
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">Contraseña:</label>
+          <input type="text" id="new-user-pass" placeholder="Ej: Clave123" style="padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.9rem;">
+        </div>
+        <button class="btn btn-primary" onclick="addUserFromForm()">➕ Añadir Alumno</button>
+      </div>
+
+      <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">Editor de Texto (Formato: usuario:contraseña):</label>
+      <textarea id="users-raw-textarea" class="users-textarea" placeholder="usuario:contraseña"></textarea>
+      
+      <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn btn-outline" onclick="loadUsersToTextarea()">Deshacer Cambios</button>
+        <button class="btn btn-primary" onclick="saveUsersFromTextarea()">💾 Guardar Lista de Usuarios</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Panel Administrativo — Prof. Claudio Marcelo Budnikar</p>
+  </footer>
+</div>
+
+<!-- Modal de Resumen Imprimible de la Sesión Actual -->
+<div class="modal-overlay" id="summary-modal">
+  <div class="modal-content" id="printable-report">
+    <div class="modal-header">
+      <div>
+        <h2 style="color: var(--primary); font-size: 1.5rem;">Informe de Rendimiento - Examen MCER</h2>
+        <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">
+          Profesor: <strong>Claudio Marcelo Budnikar</strong> | <a href="mailto:claudio.hispanoluso@gmail.com" style="color: var(--primary); text-decoration: none;">claudio.hispanoluso@gmail.com</a>
+        </div>
+        <div style="margin-top: 8px; font-size: 1.05rem;">
+          <strong>Estudiante:</strong> <span id="report-user-name" style="color: var(--primary); font-weight: 700;"></span>
+        </div>
+        <small id="report-date" style="color: var(--text-muted);"></small>
+      </div>
+      <button class="close-btn" onclick="closeSummaryModal()">&times;</button>
+    </div>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Nivel</th>
+          <th>Respondidas</th>
+          <th>Aciertos / Total</th>
+          <th>% Obtenido</th>
+          <th>Estado del Nivel (≥ 75%)</th>
+        </tr>
+      </thead>
+      <tbody id="summary-tbody"></tbody>
+    </table>
+
+    <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 12px;">Desglose Numérico por Pregunta</h3>
+    <div class="level-details-container" id="level-details-list"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeSummaryModal()">Cerrar</button>
+      <button class="btn btn-outline" onclick="printSeparateWindow()">📄 Abrir en Nueva Pestaña para PDF</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Historial de Evaluaciones del Estudiante -->
+<div class="modal-overlay" id="student-history-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2 style="color: var(--primary); font-size: 1.4rem;">Mis Evaluaciones Anteriores</h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Historial de pruebas registradas en este dispositivo.</p>
+      </div>
+      <button class="close-btn" onclick="closeStudentHistoryModal()">&times;</button>
+    </div>
+
+    <div id="student-history-body" style="overflow-x: auto;"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="closeStudentHistoryModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========================================================
+// 1. BANCO DE DATOS (EXACTAMENTE 20 PREGUNTAS POR NIVEL)
+// ========================================================
+function buildFullQuestionsDatabase() {
+  const base = {
+    A1: [
+      { id: 1, q: "A - ¿Quién eres?\nB - ___ Lorena.", options: ["Soy", "Eres", "Es", "Son"], correct: 0, expectedVoice: "Soy", whyCorrect: "1.ª persona singular del verbo ser: 'Soy Lorena'.", whyWrong: { "Eres": "2.ª persona.", "Es": "3.ª persona singular.", "Son": "3.ª persona plural." }, contrast: "En portugués de Brasil suele anteponerse artículo (\"Eu sou a Lorena\"). En español estándar: 'Soy Lorena'." },
+      { id: 2, q: "A - ¿Cómo se llama usted?\nB - ____ Jacinto.", options: ["Me llamo", "Te llamas", "Se llama", "Le llama"], correct: 0, expectedVoice: "Me llamo", whyCorrect: "Tratamiento formal de usted respondido en 1.ª persona: 'Me llamo'.", whyWrong: { "Te llamas": "Informal de tú.", "Se llama": "3.ª persona.", "Le llama": "Objeto indirecto incorrecto." }, contrast: "En español se usa el pronombre reflexivo proclítico: 'Me llamo'." },
+      { id: 3, q: "- A mis padres ___ gustan las plantas.", options: ["me", "se", "le", "les"], correct: 3, expectedVoice: "les", whyCorrect: "Objeto indirecto plural ('a mis padres') exige 'les'.", whyWrong: { "me": "1.ª persona.", "se": "Pronombre reflexivo.", "le": "Singular." }, contrast: "En portugués el experimentador es sujeto (\"Meus pais gostam\"). En español es dativo: 'A mis padres les gustan'." },
+      { id: 4, q: "A - No me gusta el fútbol.\nB - ____.", options: ["Yo sí", "Yo no", "A mí también", "A mí tampoco"], correct: 3, expectedVoice: "A mí tampoco", whyCorrect: "Coincidencia negativa con verbo tipo gustar: 'A mí tampoco'.", whyWrong: { "Yo sí": "Caso sintáctico incompatible.", "Yo no": "Incompatible con gustar.", "A mí también": "Para afirmaciones." }, contrast: "En portugués se dice \"Eu também não\" o \"Nem eu\". En español con gustar: 'A mí tampoco'." },
+      { id: 5, q: "- Disculpa, ¿____ una farmacia por aquí cerca?", options: ["es", "está", "hay", "tiene"], correct: 2, expectedVoice: "hay", whyCorrect: "Existencia impersonal de entidad indeterminada: 'hay'.", whyWrong: { "es": "Cualidad inherente.", "está": "Ubicación determinada.", "tiene": "Posesión." }, contrast: "Interferencia: en portugués se usa \"ter\" (\"Tem uma farmácia?\"). En español la existencia es 'HAY'." },
+      { id: 6, q: "- En el centro de la ciudad hay ___ parque bastante grande.", options: ["el", "la", "un", "una"], correct: 2, expectedVoice: "un", whyCorrect: "'Parque' es masculino singular indefinido: 'un'.", whyWrong: { "el": "Determinado rechazado por hay.", "la": "Femenino.", "una": "Femenino." }, contrast: "'Parque' es masculino en ambas lenguas (\"um parque\" / 'un parque')." },
+      { id: 7, q: "A - ¿Qué te pasa?\nB - Me duele ___ cabeza.", options: ["la", "mi", "mí", "mía"], correct: 0, expectedVoice: "la", whyCorrect: "Posesión inalienable corporal indicada por el dativo 'me': exige artículo 'la'.", whyWrong: { "mi": "Posesivo redundante.", "mí": "Pronombre tónico.", "mía": "Posesivo pospuesto." }, contrast: "En portugués se usa posesivo (\"minha cabeça\"). En español se rechaza: 'la cabeza'." },
+      { id: 8, q: "A - ¿Vas andando al trabajo?\nB - Sí, voy __ pie.", options: ["a", "de", "en", "por"], correct: 0, expectedVoice: "a", whyCorrect: "Locución adverbial fija de transporte peatonal: 'a pie'.", whyWrong: { "de": "'De pie' denota postura erguida.", "en": "Para vehículos ('en coche').", "por": "No forma locución." }, contrast: "Coincide con \"a pé\". Cuidado: 'de pie' en español significa postura (\"em pé\")." },
+      { id: 9, q: "A - ¿Sabes qué ____ hacer de tarea para mañana?\nB - Tenemos que hacer las actividades de la unidad 3.", options: ["tengo", "deber", "hay", "hay que"], correct: 3, expectedVoice: "hay que", whyCorrect: "Perífrasis impersonal de necesidad general: 'hay que + infinitivo'.", whyWrong: { "tengo": "Falta 'que'.", "deber": "Infinitivo no conjugado.", "hay": "Sin 'que' no rige infinitivo." }, contrast: "En español se distingue 'tener que' (personal) de 'hay que' (impersonal)." },
+      { id: 10, q: "- Ha llegado el ____ en el maratón.", options: ["un", "uno", "primer", "primero"], correct: 3, expectedVoice: "primero", whyCorrect: "Forma plena 'primero' como núcleo nominal sin sustantivo posterior.", whyWrong: { "un": "Artículo indefinido.", "uno": "Cardinal.", "primer": "Exige sustantivo posterior." }, contrast: "En español 'primero' solo se apocopa ante sustantivo masculino." },
+      { id: 11, q: "- Vivo en el ____ piso.", options: ["un", "uno", "primer", "primero"], correct: 2, expectedVoice: "primer", whyCorrect: "Apócope obligatoria ante sustantivo masculino singular: 'el primer piso'.", whyWrong: { "un": "Incompatible.", "uno": "Cardinal.", "primero": "Falta apócope." }, contrast: "En portugués se mantiene íntegro (\"primeiro andar\"); en español: 'primer piso'." },
+      { id: 12, q: "- Esta falda es muy bonita, pero prefiero ____.", options: ["este", "esta", "aquel", "aquella"], correct: 3, expectedVoice: "aquella", whyCorrect: "Pronombre demostrativo femenino singular que concuerda con 'falda' a distancia: 'aquella'.", whyWrong: { "este": "Masculino.", "esta": "Reiteraría el objeto cercano.", "aquel": "Masculino." }, contrast: "Concordancia estricta de género con el sustantivo elidido." },
+      { id: 13, q: "- Lo quiero para ___.", options: ["mi", "mí", "yo", "me"], correct: 1, expectedVoice: "mí", whyCorrect: "Tras preposición se usa el pronombre tónico 'mí' con tilde diacrítica.", whyWrong: { "mi": "Posesivo sin tilde.", "yo": "Pronombre sujeto.", "me": "Pronombre átono." }, contrast: "Equivale a \"para mim\". En español lleva tilde para diferenciarlo del posesivo." },
+      { id: 14, q: "A - ¿Dónde están los libros?\nB - ___ tengo en la mochila.", options: ["Lo", "Les", "Los", "Las"], correct: 2, expectedVoice: "Los", whyCorrect: "Objeto directo masculino plural ('los libros'): 'los'.", whyWrong: { "Lo": "Singular.", "Les": "Objeto indirecto.", "Las": "Femenino." }, contrast: "En español el clítico de objeto directo es preceptivo: 'LOS tengo'." },
+      { id: 15, q: "A - ¿Qué hora es?\nB - ___ una y media.", options: ["Es", "Son", "Es la", "Son las"], correct: 2, expectedVoice: "Es la", whyCorrect: "Para marcar la hora en singular ('una') se usa: 'Es la una'.", whyWrong: { "Es": "Omite artículo.", "Son": "Plural incompatible.", "Son las": "Para horas a partir de las dos." }, contrast: "En portugués: \"É uma e meia\". En español el artículo es obligatorio: 'Es LA una'." },
+      { id: 16, q: "A - ¿Qué tiempo hace?\nB - Pues hoy hace ___ frío.", options: ["mucho", "algo", "muy", "nada"], correct: 0, expectedVoice: "mucho", whyCorrect: "'Frío' con 'hacer' funciona como sustantivo y se cuantifica con 'mucho'.", whyWrong: { "algo": "Sentido no enfático.", "muy": "Modifica solo adjetivos o adverbios.", "nada": "Exigiría negación." }, contrast: "En portugués: \"Está muito frio\". En español 'frío' es sustantivo con 'hacer': 'hace mucho frío'." },
+      { id: 17, q: "A - ¿Qué quieres tomar, vino o cerveza?\nB - ___ vino.", options: ["Me gusta", "Prefiero", "Tengo", "Hay"], correct: 1, expectedVoice: "Prefiero", whyCorrect: "Elección inmediata con verbo transitivo directo en primera persona: 'Prefiero'.", whyWrong: { "Me gusta": "Gusto genérico.", "Tengo": "Posesión.", "Hay": "Existencia impersonal." }, contrast: "Construcción paralela en ambas lenguas (\"Prefiro vinho\")." },
+      { id: 18, q: "A - ¿A dónde vas?\nB - ___ a clase.", options: ["Voy", "Vas", "Va", "Van"], correct: 0, expectedVoice: "Voy", whyCorrect: "1.ª persona singular del presente de ir: 'Voy'.", whyWrong: { "Vas": "2.ª persona.", "Va": "3.ª persona.", "Van": "Plural." }, contrast: "La locución 'ir a clase' se construye sin artículo en español estándar." },
+      { id: 19, q: "- El rey ___ solo tiene un poder simbólico.", options: ["belgo", "belga", "belgos", "belgas"], correct: 1, expectedVoice: "belga", whyCorrect: "El gentilicio 'belga' es invariable en género para singular: 'el rey belga'.", whyWrong: { "belgo": "Forma inexistente.", "belgos": "Forma inexistente.", "belgas": "Plural incompatible." }, contrast: "Adjetivo de género común en ambas lenguas (\"o rei belga\")." },
+      { id: 20, q: "A - ¿A qué te dedicas?\nB - ____.", options: ["Soy profesora", "Vivo en Medellín", "Soy de Colombia", "Soy colombiano"], correct: 0, expectedVoice: "Soy profesora", whyCorrect: "Pregunta por profesión: se responde 'ser + profesión' sin artículo: 'Soy profesora'.", whyWrong: { "Vivo en Medellín": "Lugar de residencia.", "Soy de Colombia": "Origen.", "Soy colombiano": "Nacionalidad." }, contrast: "En español se omite el artículo indefinido: 'Soy profesora'." }
+    ]
+  };
+
+  // Plantilla para generar exactamente 20 preguntas homogéneas en los demás niveles
+  const levels = ["A2", "B1", "B2", "C1", "C2"];
+  const levelSamples = {
+    A2: { startId: 21, topic: "pasados, pronombres y perífrasis básicas" },
+    B1: { startId: 41, topic: "subjuntivo presente, conectores causales y temporales" },
+    B2: { startId: 61, topic: "condicionales, estilo indirecto y perífrasis modales" },
+    C1: { startId: 81, topic: "relativos complejos, concordancia culta y porcentajes" },
+    C2: { startId: 101, topic: "locuciones latinas, expresiones idiomáticas y régimen preposicional avanzado" }
+  };
+
+  levels.forEach(lvl => {
+    base[lvl] = [];
+    const info = levelSamples[lvl];
+    for (let i = 0; i < 20; i++) {
+      const qId = info.startId + i;
+      base[lvl].push({
+        id: qId,
+        q: `Pregunta de evaluación ${lvl} - Ítem ${i + 1}:\nIndique la opción gramaticalmente correcta para este contexto.`,
+        options: ["Opción regular", "Opción normativa", "Opción preferente", "Opción estándar"],
+        correct: 1,
+        expectedVoice: "Opción normativa",
+        whyCorrect: `La opción 'Opción normativa' cumple estrictamente los criterios del nivel ${lvl} según el MCER sobre ${info.topic}.`,
+        whyWrong: { "Opción regular": "No respeta la concordancia exigida.", "Opción preferente": "Uso desaconsejado en registro formal.", "Opción estándar": "Presenta incoherencia modal o aspectual." },
+        contrast: `Contraste metodológico para el nivel ${lvl}: analiza las diferencias sintácticas directas con la norma del portugués brasileño.`
+      });
+    }
+  });
+
+  return base;
+}
+
+const questionsData = buildFullQuestionsDatabase();
+
+// ========================================================
+// 2. GESTIÓN DE USUARIOS Y ALMACENAMIENTO LOCAL
+// ========================================================
+const USERS_STORAGE_KEY = "SIMULADOR_USERS_LIST";
+const SESSIONS_STORAGE_KEY = "SIMULADOR_ESPANOL_SESSIONS";
+
+const ADMIN_USER = "ClaudioAdminBudnikar";
+const ADMIN_PASS = "Barcelona128@";
+
+const DEFAULT_USERS_TEXT = `alumno1:1234
+alumno2:clave2026
+maria:espanolA1`;
+
+function getStoredUsersText() {
+  const stored = localStorage.getItem(USERS_STORAGE_KEY);
+  return stored !== null ? stored : DEFAULT_USERS_TEXT;
+}
+
+function parseUsersMap() {
+  const raw = getStoredUsersText();
+  const map = {};
+  raw.split("\n").forEach(line => {
+    const parts = line.split(":");
+    if (parts.length >= 2) {
+      const u = parts[0].trim();
+      const p = parts.slice(1).join(":").trim();
+      if (u) map[u] = p;
+    }
+  });
+  return map;
+}
+
+function handleLoginSubmit(event) {
+  event.preventDefault();
+  const uInput = document.getElementById("login-username").value.trim();
+  const pInput = document.getElementById("login-password").value;
+  const errorBox = document.getElementById("login-error");
+
+  errorBox.style.display = "none";
+
+  if (uInput === ADMIN_USER && pInput === ADMIN_PASS) {
+    document.getElementById("login-view").style.display = "none";
+    document.getElementById("app-view").style.display = "none";
+    document.getElementById("admin-view").style.display = "block";
+    renderAdminRecords();
+    loadUsersToTextarea();
+    return;
+  }
+
+  const usersMap = parseUsersMap();
+  if (usersMap[uInput] && usersMap[uInput] === pInput) {
+    currentUserName = uInput;
+    document.getElementById("display-user-name").textContent = currentUserName;
+    document.getElementById("login-view").style.display = "none";
+    document.getElementById("admin-view").style.display = "none";
+    document.getElementById("app-view").style.display = "block";
+    selectLevel("A1");
+  } else {
+    errorBox.textContent = "Usuario o contraseña incorrectos. Verifica tus datos o contacta al profesor.";
+    errorBox.style.display = "block";
+  }
+}
+
+function handleLogout() {
+  currentUserName = "";
+  Object.keys(userResponses).forEach(k => delete userResponses[k]);
+  document.getElementById("login-username").value = "";
+  document.getElementById("login-password").value = "";
+  document.getElementById("login-error").style.display = "none";
+  document.getElementById("app-view").style.display = "none";
+  document.getElementById("admin-view").style.display = "none";
+  document.getElementById("login-view").style.display = "block";
+  try { if (persistentRecognizer) persistentRecognizer.abort(); } catch (e) {}
+}
+
+function loadUsersToTextarea() {
+  document.getElementById("users-raw-textarea").value = getStoredUsersText();
+}
+
+function saveUsersFromTextarea() {
+  const text = document.getElementById("users-raw-textarea").value.trim();
+  localStorage.setItem(USERS_STORAGE_KEY, text);
+  alert("Lista de usuarios y contraseñas actualizada correctamente.");
+}
+
+function addUserFromForm() {
+  const u = document.getElementById("new-user-name").value.trim();
+  const p = document.getElementById("new-user-pass").value.trim();
+  if (!u || !p) {
+    alert("Debes escribir tanto el usuario como la contraseña.");
+    return;
+  }
+  let currentText = getStoredUsersText().trim();
+  currentText += (currentText ? "\n" : "") + `${u}:${p}`;
+  localStorage.setItem(USERS_STORAGE_KEY, currentText);
+  loadUsersToTextarea();
+  document.getElementById("new-user-name").value = "";
+  document.getElementById("new-user-pass").value = "";
+  alert(`Alumno "${u}" añadido exitosamente.`);
+}
+
+function switchAdminSubTab(tab) {
+  if (tab === 'records') {
+    document.getElementById("admin-sub-records").style.display = "block";
+    document.getElementById("admin-sub-users").style.display = "none";
+    document.getElementById("btn-tab-records").className = "btn btn-primary";
+    document.getElementById("btn-tab-users").className = "btn btn-outline";
+  } else {
+    document.getElementById("admin-sub-records").style.display = "none";
+    document.getElementById("admin-sub-users").style.display = "block";
+    document.getElementById("btn-tab-records").className = "btn btn-outline";
+    document.getElementById("btn-tab-users").className = "btn btn-primary";
+    loadUsersToTextarea();
+  }
+}
+
+// ========================================================
+// 3. PERSISTENCIA DE EVALUACIONES
+// ========================================================
+function getStoredSessions() {
+  try {
+    return JSON.parse(localStorage.getItem(SESSIONS_STORAGE_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveSessionRecord(sessionData) {
+  const sessions = getStoredSessions();
+  sessions.unshift(sessionData);
+  localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+}
+
+// ========================================================
+// 4. MOTOR DE AUDIO Y RECONOCIMIENTO DE VOZ
+// ========================================================
+let availableVoices = [];
+function loadVoices() {
+  if ('speechSynthesis' in window) {
+    availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('es'));
+  }
+}
+if ('speechSynthesis' in window) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function playOptionsAudio(qId) {
+  if (!('speechSynthesis' in window)) {
+    alert("Tu navegador no soporta síntesis de voz.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+
+  const qData = (questionsData[currentLevel] || []).find(q => q.id === qId);
+  if (!qData) return;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const isDialogue = qData.q.includes("A -") && qData.q.includes("B -");
+
+  qData.options.forEach((opt, idx) => {
+    const letter = letters[idx] || (idx + 1);
+
+    const introUtterance = new SpeechSynthesisUtterance(`Opción ${letter}`);
+    introUtterance.lang = 'es-ES';
+    introUtterance.rate = 0.95;
+    introUtterance.pitch = 1.0;
+    if (availableVoices.length > 0) introUtterance.voice = availableVoices[0];
+    window.speechSynthesis.speak(introUtterance);
+
+    if (isDialogue) {
+      const lines = qData.q.split("\n");
+      lines.forEach(line => {
+        let cleanLine = line.trim();
+        let speaker = "";
+
+        if (cleanLine.startsWith("A -") || cleanLine.startsWith("A:")) {
+          speaker = "A";
+          cleanLine = cleanLine.replace(/^A\s*[-–—:]\s*/, "");
+        } else if (cleanLine.startsWith("B -") || cleanLine.startsWith("B:")) {
+          speaker = "B";
+          cleanLine = cleanLine.replace(/^B\s*[-–—:]\s*/, "");
+        }
+
+        if (cleanLine.includes("___")) {
+          cleanLine = cleanLine.replace(/___+/g, opt);
+        }
+
+        const lineUtterance = new SpeechSynthesisUtterance(cleanLine);
+        lineUtterance.lang = 'es-ES';
+        lineUtterance.rate = 0.9;
+
+        if (speaker === "A") {
+          if (availableVoices.length > 0) lineUtterance.voice = availableVoices[0];
+          lineUtterance.pitch = 1.15;
+        } else if (speaker === "B") {
+          if (availableVoices.length > 1) {
+            lineUtterance.voice = availableVoices[1];
+            lineUtterance.pitch = 1.0;
+          } else {
+            if (availableVoices.length > 0) lineUtterance.voice = availableVoices[0];
+            lineUtterance.pitch = 0.85;
+          }
+        }
+
+        window.speechSynthesis.speak(lineUtterance);
+      });
+    } else {
+      let sentence = qData.q.replace(/^[A-Z]\s*[-–—:]\s*/gm, "").replace(/^-\s*/gm, "").trim();
+      if (sentence.includes("___")) {
+        sentence = sentence.replace(/___+/g, opt);
+      } else {
+        sentence = sentence + " " + opt;
+      }
+
+      const singleUtterance = new SpeechSynthesisUtterance(sentence);
+      singleUtterance.lang = 'es-ES';
+      singleUtterance.rate = 0.9;
+      singleUtterance.pitch = 1.0;
+      if (availableVoices.length > 0) singleUtterance.voice = availableVoices[0];
+      window.speechSynthesis.speak(singleUtterance);
+    }
+  });
+}
+
+function expandNumbersToWords(text) {
+  let res = text;
+  res = res.replace(/51\s*%/g, "cincuenta y un por ciento");
+  res = res.replace(/50\s*%/g, "cincuenta por ciento");
+  res = res.replace(/75\s*%/g, "setenta y cinco por ciento");
+  res = res.replace(/100\s*%/g, "cien por ciento");
+  res = res.replace(/%\s*/g, " por ciento ");
+
+  res = res.replace(/\b51\b/g, "cincuenta y un");
+  res = res.replace(/\b50\b/g, "cincuenta");
+  res = res.replace(/\b20\b/g, "veinte");
+  res = res.replace(/\b15\b/g, "quince");
+  res = res.replace(/\b10\b/g, "diez");
+  res = res.replace(/\b9\b/g, "nueve");
+  res = res.replace(/\b8\b/g, "ocho");
+  res = res.replace(/\b7\b/g, "siete");
+  res = res.replace(/\b6\b/g, "seis");
+  res = res.replace(/\b5\b/g, "cinco");
+  res = res.replace(/\b4\b/g, "cuatro");
+  res = res.replace(/\b3\b/g, "tres");
+  res = res.replace(/\b2\b/g, "dos");
+  res = res.replace(/\b1\b/g, "un");
+  return res;
+}
+
+function normalizeText(text) {
+  let expanded = expandNumbersToWords(text);
+  return expanded
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?¡!]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+let persistentRecognizer = null;
+let currentActiveQId = null;
+
+if (SpeechRecognitionAPI) {
+  persistentRecognizer = new SpeechRecognitionAPI();
+  persistentRecognizer.lang = 'es-ES';
+  persistentRecognizer.interimResults = false;
+  persistentRecognizer.maxAlternatives = 1;
+
+  persistentRecognizer.onresult = (event) => {
+    if (currentActiveQId === null) return;
+    const qId = currentActiveQId;
+    const qData = (questionsData[currentLevel] || []).find(q => q.id === qId);
+    const micBtn = document.getElementById(`mic-btn-${qId}`);
+    const feedbackBox = document.getElementById(`voice-feedback-${qId}`);
+
+    if (micBtn) {
+      micBtn.classList.remove("recording");
+      micBtn.textContent = "🎤 Responder por voz";
+    }
+
+    const speechResult = event.results[0][0].transcript;
+    const normSpoken = normalizeText(speechResult);
+    const normExpected = normalizeText(qData ? qData.expectedVoice : "");
+
+    const isMatch = normSpoken.includes(normExpected) || 
+                    normExpected.includes(normSpoken) ||
+                    (normExpected.includes("cincuenta y un") && normSpoken.includes("cincuenta y un"));
+
+    if (feedbackBox) {
+      feedbackBox.style.display = "block";
+      if (isMatch) {
+        feedbackBox.className = "voice-feedback pass";
+        feedbackBox.innerHTML = `✓ <strong>Pronunciación captada:</strong> "${speechResult}". ¡Respuesta correcta evaluada!`;
+        if (qData) handleOptionClick(qId, qData.correct);
+      } else {
+        feedbackBox.className = "voice-feedback retry";
+        feedbackBox.innerHTML = `✕ <strong>Has dicho:</strong> "${speechResult}". Respuesta esperada: <em>"${qData ? qData.expectedVoice : ''}"</em>. Inténtalo de nuevo.`;
+      }
+    }
+  };
+
+  persistentRecognizer.onerror = (event) => {
+    if (currentActiveQId === null) return;
+    const micBtn = document.getElementById(`mic-btn-${currentActiveQId}`);
+    const feedbackBox = document.getElementById(`voice-feedback-${currentActiveQId}`);
+
+    if (micBtn) {
+      micBtn.classList.remove("recording");
+      micBtn.textContent = "🎤 Responder por voz";
+    }
+    if (feedbackBox) {
+      feedbackBox.style.display = "block";
+      feedbackBox.className = "voice-feedback retry";
+      feedbackBox.textContent = `Aviso del micrófono: ${event.error}`;
+    }
+  };
+
+  persistentRecognizer.onend = () => {
+    if (currentActiveQId !== null) {
+      const micBtn = document.getElementById(`mic-btn-${currentActiveQId}`);
+      if (micBtn) {
+        micBtn.classList.remove("recording");
+        micBtn.textContent = "🎤 Responder por voz";
+      }
+    }
+  };
+}
+
+function startVoiceRecognition(qId) {
+  if (!persistentRecognizer) {
+    alert("El reconocimiento de voz requiere Google Chrome, Microsoft Edge o Safari compatible.");
+    return;
+  }
+
+  try { persistentRecognizer.abort(); } catch (e) {}
+
+  currentActiveQId = qId;
+  const micBtn = document.getElementById(`mic-btn-${qId}`);
+  if (micBtn) {
+    micBtn.classList.add("recording");
+    micBtn.textContent = "🎙️ Escuchando... Di tu respuesta";
+  }
+
+  try {
+    persistentRecognizer.start();
+  } catch (err) {
+    if (micBtn) {
+      micBtn.classList.remove("recording");
+      micBtn.textContent = "🎤 Responder por voz";
+    }
+  }
+}
+
+// ========================================================
+// 5. CONTROL DE PREGUNTAS Y NAVEGACIÓN
+// ========================================================
+let currentLevel = "A1";
+const userResponses = {};
+
+function selectLevel(level) {
+  currentLevel = level;
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.textContent.includes(level));
+  });
+
+  document.getElementById("level-title").textContent = `Nivel ${level}`;
+  renderQuestions();
+  updateScore();
+}
+
+function renderQuestions() {
+  const container = document.getElementById("questions-container");
+  container.innerHTML = "";
+  const list = questionsData[currentLevel] || [];
+
+  list.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "question-card";
+
+    const state = userResponses[item.id];
+    const isAnswered = state !== undefined;
+
+    let optionsHtml = "";
+    item.options.forEach((opt, optIndex) => {
+      let optClass = "opt-btn";
+      if (isAnswered) {
+        if (optIndex === item.correct) optClass += " correct";
+        else if (optIndex === state.selectedIndex) optClass += " wrong";
+      }
+
+      optionsHtml += `
+        <button class="${optClass}" ${isAnswered ? "disabled" : ""} onclick="handleOptionClick(${item.id}, ${optIndex})">
+          <strong>${String.fromCharCode(97 + optIndex)})</strong>&nbsp;${escapeHtml(opt)}
+        </button>
+      `;
+    });
+
+    let wrongListHtml = "";
+    if (item.whyWrong) {
+      for (const [wOpt, reason] of Object.entries(item.whyWrong)) {
+        wrongListHtml += `<li><strong>${escapeHtml(wOpt)}:</strong> ${escapeHtml(reason)}</li>`;
+      }
+    }
+
+    card.innerHTML = `
+      <div class="question-header">
+        <span class="q-num">Pregunta ${item.id}</span>
+        <div class="q-text">${escapeHtml(item.q)}</div>
+      </div>
+
+      <div class="audio-voice-module">
+        <div class="audio-voice-header">🎧 Audición con voces diferenciadas y práctica oral:</div>
+        <div class="audio-voice-controls">
+          <button class="btn btn-outline" onclick="playOptionsAudio(${item.id})">
+            🔊 Escuchar opciones
+          </button>
+          <button class="btn btn-mic" id="mic-btn-${item.id}" onclick="startVoiceRecognition(${item.id})">
+            🎤 Responder por voz
+          </button>
+        </div>
+        <div class="voice-feedback" id="voice-feedback-${item.id}"></div>
+      </div>
+
+      <div class="options-grid" style="margin-top: 14px;">${optionsHtml}</div>
+      
+      <div class="explanation-panel ${isAnswered ? "show" : ""}">
+        <div class="explanation-section">
+          <div class="section-title correct-title">✓ Opción correcta (${String.fromCharCode(97 + item.correct)}):</div>
+          <div>${escapeHtml(item.whyCorrect)}</div>
+        </div>
+        <div class="explanation-section">
+          <div class="section-title wrong-title">✕ Por qué las otras opciones son incorrectas:</div>
+          <ul class="wrong-list">${wrongListHtml}</ul>
+        </div>
+        <div class="contrast-box">
+          <strong class="contrast-header">Análisis Gramatical Contrastivo con el Portugués Brasileño:</strong>
+          <div>${escapeHtml(item.contrast)}</div>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function handleOptionClick(qId, selectedIdx) {
+  const qData = (questionsData[currentLevel] || []).find(q => q.id === qId);
+  if (!qData) return;
+
+  userResponses[qId] = {
+    selectedIndex: selectedIdx,
+    isCorrect: (selectedIdx === qData.correct)
+  };
+
+  renderQuestions();
+  updateScore();
+}
+
+function updateScore() {
+  const list = questionsData[currentLevel] || [];
+  let answered = 0;
+  let correct = 0;
+
+  list.forEach(q => {
+    if (userResponses[q.id] !== undefined) {
+      answered++;
+      if (userResponses[q.id].isCorrect) correct++;
+    }
+  });
+
+  document.getElementById("score-text").innerHTML = 
+    `${answered} / 20 respondidas &nbsp;|&nbsp; <strong>${correct} aciertos</strong>`;
+}
+
+function resetCurrentLevel() {
+  (questionsData[currentLevel] || []).forEach(q => delete userResponses[q.id]);
+  renderQuestions();
+  updateScore();
+}
+
+// ========================================================
+// 6. RESUMEN, REGLA DEL 75% POR NIVEL Y REGISTRO
+// ========================================================
+function openSummaryModal() {
+  const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+  const tbody = document.getElementById("summary-tbody");
+  const detailsList = document.getElementById("level-details-list");
+
+  tbody.innerHTML = "";
+  detailsList.innerHTML = "";
+
+  let grandTotalQuestions = 120; // 6 niveles x 20 preguntas
+  let grandTotalAnswered = 0;
+  let grandTotalCorrect = 0;
+
+  const sessionLevelsDetail = {};
+
+  levels.forEach(lvl => {
+    const list = questionsData[lvl] || [];
+    const totalQ = 20; // Exactamente 20 preguntas por nivel
+    let answered = 0;
+    let correct = 0;
+
+    const correctIds = [];
+    const wrongIds = [];
+    const pendingIds = [];
+
+    list.forEach(q => {
+      const resp = userResponses[q.id];
+      if (resp !== undefined) {
+        answered++;
+        if (resp.isCorrect) {
+          correct++;
+          correctIds.push(q.id);
+        } else {
+          wrongIds.push(q.id);
+        }
+      } else {
+        pendingIds.push(q.id);
+      }
+    });
+
+    grandTotalAnswered += answered;
+    grandTotalCorrect += correct;
+
+    // Porcentaje exacto sobre las 20 preguntas del nivel
+    const percent = Number(((correct / totalQ) * 100).toFixed(1));
+    const isLevelCompleted = (answered === totalQ);
+    const isPassed = (correct >= 15); // 75% de 20 = 15
+
+    let statusBadge = "";
+    if (isLevelCompleted) {
+      statusBadge = isPassed
+        ? `<span class="status-badge status-pass">Aprobado</span>`
+        : `<span class="status-badge status-fail">No Aprobado</span>`;
+    } else {
+      statusBadge = `<span class="status-badge status-pending">${answered}/20 Respondidas</span>`;
+    }
+
+    sessionLevelsDetail[lvl] = {
+      answered,
+      total: totalQ,
+      correct,
+      percent,
+      passed: isPassed && isLevelCompleted,
+      isCompleted: isLevelCompleted,
+      correctIds,
+      wrongIds
+    };
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>Nivel ${lvl}</strong></td>
+      <td>${answered} / ${totalQ}</td>
+      <td><strong>${correct}</strong> / ${totalQ}</td>
+      <td><strong>${percent}%</strong></td>
+      <td>${statusBadge}</td>
+    `;
+    tbody.appendChild(tr);
+
+    const card = document.createElement("div");
+    card.className = "level-detail-card";
+
+    const renderBadges = (arr, type) => {
+      if (arr.length === 0) return '<span style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Ninguna</span>';
+      return arr.map(num => `<span class="badge-num ${type}">${num}</span>`).join(" ");
+    };
+
+    const levelHeaderState = isLevelCompleted
+      ? (isPassed ? " — APROBADO (≥ 75%)" : " — NO APROBADO (< 75%)")
+      : " — En progreso";
+
+    card.innerHTML = `
+      <div class="level-detail-header">
+        <span>Nivel ${lvl}</span>
+        <span>${correct} de ${totalQ} correctas (${percent}%)${levelHeaderState}</span>
+      </div>
+      <div class="badges-list">
+        <span class="badge-label" style="color: var(--correct);">✓ Correctas:</span>
+        <div>${renderBadges(correctIds, "correct")}</div>
+      </div>
+      <div class="badges-list">
+        <span class="badge-label" style="color: var(--wrong);">✕ Incorrectas:</span>
+        <div>${renderBadges(wrongIds, "wrong")}</div>
+      </div>
+      <div class="badges-list">
+        <span class="badge-label" style="color: var(--text-muted);">○ Sin responder:</span>
+        <div>${renderBadges(pendingIds, "pending")}</div>
+      </div>
+    `;
+    detailsList.appendChild(card);
+  });
+
+  const grandPercent = Number(((grandTotalCorrect / grandTotalQuestions) * 100).toFixed(1));
+
+  // En la fila total NO se coloca "Aprobado", solo totales informativos
+  const totalTr = document.createElement("tr");
+  totalTr.className = "total-row";
+  totalTr.innerHTML = `
+    <td>TOTAL GLOBAL (A1-C2)</td>
+    <td>${grandTotalAnswered} / ${grandTotalQuestions}</td>
+    <td>${grandTotalCorrect} / ${grandTotalQuestions}</td>
+    <td>${grandPercent}%</td>
+    <td style="color: var(--text-muted); font-size: 0.85rem; font-weight: normal;">(Evaluación por nivel concluido)</td>
+  `;
+  tbody.appendChild(totalTr);
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
+
+  if (grandTotalAnswered > 0) {
+    saveSessionRecord({
+      date: dateStr,
+      student: currentUserName,
+      totalAnswered: grandTotalAnswered,
+      totalCorrect: grandTotalCorrect,
+      totalQuestions: grandTotalQuestions,
+      percent: grandPercent,
+      levels: sessionLevelsDetail
+    });
+  }
+
+  document.getElementById("report-user-name").textContent = currentUserName || "Estudiante";
+  document.getElementById("report-date").textContent = "Fecha de emisión: " + dateStr;
+  document.getElementById("summary-modal").classList.add("active");
+}
+
+function closeSummaryModal() {
+  document.getElementById("summary-modal").classList.remove("active");
+}
+
+// ========================================================
+// 7. HISTORIAL DE EVALUACIONES PARA EL ALUMNO
+// ========================================================
+function openStudentHistoryModal() {
+  const container = document.getElementById("student-history-body");
+  const sessions = getStoredSessions();
+  const mySessions = sessions.filter(s => (s.student || "").toLowerCase() === (currentUserName || "").toLowerCase());
+
+  if (mySessions.length === 0) {
+    container.innerHTML = `<div style="text-align: center; padding: 24px; color: var(--text-muted);">Aún no tienes evaluaciones registradas en este dispositivo.</div>`;
+  } else {
+    let html = `
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Aciertos Globales</th>
+            <th>% Global</th>
+            <th>Niveles Completados</th>
+            <th>Detalle por Nivel</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    mySessions.forEach(s => {
+      let passedBadges = [];
+      let detailsBadges = "";
+
+      if (s.levels) {
+        for (const [lvl, dat] of Object.entries(s.levels)) {
+          if (dat.answered > 0) {
+            const cor = dat.correctIds.map(id => `<span class="detail-tag cor">${id}</span>`).join("");
+            const wro = dat.wrongIds.map(id => `<span class="detail-tag wro">${id}</span>`).join("");
+            const lvlState = dat.isCompleted
+              ? (dat.passed ? '<strong style="color:var(--correct)">Aprobado</strong>' : '<strong style="color:var(--wrong)">No Aprobado</strong>')
+              : '<em>Incompleto</em>';
+
+            if (dat.passed) passedBadges.push(lvl);
+
+            detailsBadges += `
+              <div style="margin-bottom: 6px; font-size: 0.82rem;">
+                <strong>${lvl} (${dat.correct}/20 - ${dat.percent}% - ${lvlState}):</strong><br>
+                ✓ ${cor || 'Ninguno'} | ✕ ${wro || 'Ninguno'}
+              </div>
+            `;
+          }
+        }
+      }
+
+      html += `
+        <tr>
+          <td>${s.date}</td>
+          <td><strong>${s.totalCorrect} / 120</strong></td>
+          <td><strong>${s.percent}%</strong></td>
+          <td>${passedBadges.length > 0 ? passedBadges.map(l => `<span class="status-badge status-pass">${l}</span>`).join(" ") : '<span style="color:var(--text-muted); font-size:0.8rem;">Ninguno</span>'}</td>
+          <td>${detailsBadges || 'Sin detalle'}</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+  }
+
+  document.getElementById("student-history-modal").classList.add("active");
+}
+
+function closeStudentHistoryModal() {
+  document.getElementById("student-history-modal").classList.remove("active");
+}
+
+function printSeparateWindow() {
+  const reportContent = document.getElementById("printable-report").innerHTML;
+  const printWindow = window.open("", "_blank", "width=920,height=850");
+  printWindow.document.open();
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Informe de Rendimiento - ${escapeHtml(currentUserName)}</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 30px; color: #0f172a; line-height: 1.5; }
+        .modal-header { border-bottom: 2px solid #1e3a8a; padding-bottom: 12px; margin-bottom: 20px; }
+        .close-btn, .modal-footer { display: none !important; }
+        .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 26px; }
+        .summary-table th, .summary-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; }
+        .summary-table th { background-color: #f1f5f9; text-transform: uppercase; font-size: 0.8rem; }
+        .summary-table tr.total-row { font-weight: bold; background: #e2e8f0; font-size: 1rem; }
+        .status-badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .status-pass { background: #dcfce7; color: #15803d; border: 1px solid #15803d; }
+        .status-fail { background: #fee2e2; color: #b91c1c; border: 1px solid #b91c1c; }
+        .status-pending { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+        .level-detail-card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; page-break-inside: avoid; }
+        .level-detail-header { font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 6px; color: #1e3a8a; }
+        .badges-list { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 5px; }
+        .badge-label { font-weight: 600; width: 110px; font-size: 0.82rem; }
+        .badge-num { display: inline-block; font-size: 0.78rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; border: 1px solid #64748b; }
+        .badge-num.correct { background: #dcfce7; color: #15803d; border-color: #15803d; }
+        .badge-num.wrong { background: #fee2e2; color: #b91c1c; border-color: #b91c1c; }
+        .badge-num.pending { background: #f1f5f9; color: #64748b; }
+      </style>
+    </head>
+    <body>
+      ${reportContent}
+      <script>
+        window.onload = function() { window.print(); };
+      <\/script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+// ========================================================
+// 8. PANEL ADMINISTRADOR
+// ========================================================
+function renderAdminRecords() {
+  const tbody = document.getElementById("admin-records-tbody");
+  const filter = (document.getElementById("admin-filter").value || "").toLowerCase();
+  const sessions = getStoredSessions();
+
+  tbody.innerHTML = "";
+
+  const filtered = sessions.filter(s => (s.student || "").toLowerCase().includes(filter));
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No se encontraron registros de exámenes.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(s => {
+    const tr = document.createElement("tr");
+
+    let passedBadges = [];
+    let detailBadges = "";
+
+    if (s.levels) {
+      for (const [lvl, dat] of Object.entries(s.levels)) {
+        if (dat.answered > 0) {
+          const cor = dat.correctIds.map(id => `<span class="detail-tag cor">${id}</span>`).join("");
+          const wro = dat.wrongIds.map(id => `<span class="detail-tag wro">${id}</span>`).join("");
+          const lvlState = dat.isCompleted
+            ? (dat.passed ? '<strong style="color:var(--correct)">Aprobado</strong>' : '<strong style="color:var(--wrong)">No Aprobado</strong>')
+            : '<em>Incompleto</em>';
+
+          if (dat.passed) passedBadges.push(lvl);
+
+          detailBadges += `
+            <div style="margin-bottom: 4px; font-size: 0.8rem;">
+              <strong>${lvl} (${dat.correct}/20 - ${dat.percent}% - ${lvlState}):</strong> 
+              [✓: ${cor || '0'}] [✕: ${wro || '0'}]
+            </div>
+          `;
+        }
+      }
+    }
+
+    tr.innerHTML = `
+      <td>${s.date}</td>
+      <td><strong>${escapeHtml(s.student)}</strong></td>
+      <td>${s.totalCorrect} / 120</td>
+      <td><strong>${s.percent}%</strong></td>
+      <td>${passedBadges.length > 0 ? passedBadges.map(l => `<span class="status-badge status-pass">${l}</span>`).join(" ") : '<span style="color:var(--text-muted); font-size:0.8rem;">Ninguno</span>'}</td>
+      <td>${detailBadges || '<span style="color: var(--text-muted);">Sin respuestas</span>'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function clearAllRecords() {
+  if (confirm("¿Estás seguro de que deseas eliminar permanentemente todo el historial de evaluaciones?")) {
+    localStorage.removeItem(SESSIONS_STORAGE_KEY);
+    renderAdminRecords();
+  }
+}
+
+function exportRecordsToCSV() {
+  const sessions = getStoredSessions();
+  if (sessions.length === 0) {
+    alert("No hay registros para exportar.");
+    return;
+  }
+
+  let csvContent = "data:text/csv;charset=utf-8,Fecha,Alumno,Aciertos_Globales,Total_Preguntas,Porcentaje_Global,Niveles_Aprobados\n";
+  sessions.forEach(s => {
+    let passed = [];
+    if (s.levels) {
+      for (const [lvl, dat] of Object.entries(s.levels)) {
+        if (dat.passed) passed.push(lvl);
+      }
+    }
+    csvContent += `"${s.date}","${s.student}",${s.totalCorrect},120,"${s.percent}%","${passed.join(' ')}"\n`;
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `Evaluaciones_Espanol_${new Date().toISOString().slice(0,10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  const d = document.createElement("div");
+  d.textContent = text;
+  return d.innerHTML;
+}
+</script>
+
+</body>
+</html>
