@@ -34,7 +34,7 @@
       line-height: 1.5;
       padding: 20px;
     }
-    .container { max-width: 920px; margin: 0 auto; }
+    .container { max-width: 960px; margin: 0 auto; }
 
     .author-badge {
       display: inline-block;
@@ -158,6 +158,8 @@
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-outline { background: #f1f5f9; border: 1px solid var(--border); color: var(--text); }
     .btn-outline:hover { background: #e2e8f0; }
+    .btn-danger { background: #fee2e2; color: var(--wrong); border: 1px solid #fca5a5; }
+    .btn-danger:hover { background: #fecaca; }
 
     .question-card {
       background: var(--card-bg);
@@ -217,11 +219,7 @@
       align-items: center;
       gap: 6px;
     }
-    .audio-voice-controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .audio-voice-controls { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn-mic { background: #ef4444; color: white; }
     .btn-mic.recording {
       animation: pulse 1s infinite alternate;
@@ -279,6 +277,57 @@
     }
     .contrast-header { display: block; color: #713f12; font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
 
+    /* Panel Administrador */
+    .admin-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .admin-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+    .filter-input {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      min-width: 250px;
+    }
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    .records-table th, .records-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .records-table th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+    .detail-tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin: 1px;
+    }
+    .detail-tag.cor { background: var(--correct-bg); color: var(--correct); }
+    .detail-tag.wro { background: var(--wrong-bg); color: var(--wrong); }
+
     footer {
       text-align: center;
       margin-top: 40px;
@@ -290,6 +339,7 @@
     footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
     footer a:hover { text-decoration: underline; }
 
+    /* Modal */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -346,7 +396,7 @@
     .badge-num { display: inline-block; font-size: 0.8rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; min-width: 26px; text-align: center; }
     .badge-num.correct { background: var(--correct-bg); color: var(--correct); border: 1px solid var(--correct); }
     .badge-num.wrong { background: var(--wrong-bg); color: var(--wrong); border: 1px solid var(--wrong); }
-    .badge-num.pending { background: #f1f5f9; color: var(--text-muted); border: 1px solid --border; }
+    .badge-num.pending { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border); }
 
     .modal-footer { display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--border); padding-top: 16px; }
 
@@ -363,6 +413,7 @@
 </head>
 <body>
 
+<!-- PANTALLA 1: Identificación o Login de Administrador -->
 <div id="login-view" class="login-card">
   <div class="author-badge">
     Creador: <strong>Claudio Marcelo Budnikar</strong>
@@ -372,11 +423,12 @@
   <p style="font-size: 0.85rem; margin-top: -10px;">Contacto: <a href="mailto:claudio.hispanoluso@gmail.com" style="color: var(--primary);">claudio.hispanoluso@gmail.com</a></p>
   
   <form onsubmit="handleStart(event)" style="margin-top: 20px;">
-    <input type="text" id="user-name-input" placeholder="Ingresa tu nombre completo" required autocomplete="name">
-    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Ingresar al Examen</button>
+    <input type="text" id="user-name-input" placeholder="Ingresa tu nombre completo" required autocomplete="off">
+    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Ingresar</button>
   </form>
 </div>
 
+<!-- PANTALLA 2: Sistema Principal del Alumno -->
 <div id="app-view" class="container" style="display: none;">
   <div class="user-bar">
     <div class="user-badge">
@@ -384,8 +436,8 @@
       <span id="display-user-name" style="color: var(--text);"></span>
     </div>
     <div style="display: flex; gap: 10px;">
-      <button class="btn btn-primary" onclick="openSummaryModal()">🖨️ Ver / Imprimir Resumen</button>
-      <button class="btn btn-outline" onclick="handleLogout()">Cambiar Usuario</button>
+      <button class="btn btn-primary" onclick="openSummaryModal()">🖨️ Finalizar y Ver Resumen</button>
+      <button class="btn btn-outline" onclick="handleLogout()">Salir</button>
     </div>
   </div>
 
@@ -394,7 +446,7 @@
       Sistema desarrollado por <strong>Claudio Marcelo Budnikar</strong> — Clases Particulares de Español (<a href="mailto:claudio.hispanoluso@gmail.com">claudio.hispanoluso@gmail.com</a>)
     </div>
     <h1>Simulador Gramatical de Español</h1>
-    <p>120 cuestiones con audición diferenciada por interlocutor, lectura completa de opciones y reconocimiento por voz con normalización numérica.</p>
+    <p>120 cuestiones con audición secuencial de opciones, voces diferenciadas y reconocimiento oral compatible.</p>
   </header>
 
   <div class="tabs">
@@ -407,7 +459,7 @@
   </div>
 
   <div class="rule-banner">
-    ⚖️ <strong>Criterio de Evaluación:</strong> Para <strong>aprobar</strong> cada nivel se exige alcanzar al menos el <strong>75% de respuestas correctas</strong> (mínimo 15 de 20 preguntas acertadas). Puedes escuchar las oraciones completas con voces diferenciadas, responder por voz o hacer clic directamente.
+    ⚖️ <strong>Criterio de Evaluación:</strong> Para <strong>aprobar</strong> cada nivel se exige alcanzar al menos el <strong>75% de respuestas correctas</strong> (mínimo 15 de 20 preguntas acertadas). Puedes escuchar las oraciones completas, responder por voz o hacer clic directamente.
   </div>
 
   <div class="status-card">
@@ -428,6 +480,54 @@
   </footer>
 </div>
 
+<!-- PANTALLA 3: Panel Exclusivo del Administrador -->
+<div id="admin-view" class="container" style="display: none;">
+  <div class="user-bar">
+    <div class="user-badge" style="color: #b91c1c;">
+      <span>👑 Administrador Activo:</span>
+      <span>Prof. Claudio Marcelo Budnikar</span>
+    </div>
+    <button class="btn btn-outline" onclick="handleLogout()">Cerrar Sesión Admin</button>
+  </div>
+
+  <div class="admin-container">
+    <h2>Registro Histórico de Evaluaciones</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
+      Resultados almacenados localmente de todos los alumnos que han finalizado sus evaluaciones en este equipo.
+    </p>
+
+    <div class="admin-header-actions">
+      <input type="text" id="admin-filter" class="filter-input" placeholder="Filtrar por nombre de alumno..." oninput="renderAdminRecords()">
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-outline" onclick="exportRecordsToCSV()">📥 Exportar a Excel (CSV)</button>
+        <button class="btn btn-danger" onclick="clearAllRecords()">🗑️ Borrar Historial</button>
+      </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th>Fecha y Hora</th>
+            <th>Alumno</th>
+            <th>Nivel</th>
+            <th>Aciertos</th>
+            <th>% Obtenido</th>
+            <th>Estado (≥ 75%)</th>
+            <th>Detalle de Preguntas</th>
+          </tr>
+        </thead>
+        <tbody id="admin-records-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <p>Panel Administrativo — Sistema de Evaluación de Español</p>
+  </footer>
+</div>
+
+<!-- Modal de Resumen Imprimible para Alumno -->
 <div class="modal-overlay" id="summary-modal">
   <div class="modal-content" id="printable-report">
     <div class="modal-header">
@@ -469,6 +569,9 @@
 </div>
 
 <script>
+// ========================================================
+// 1. BANCO DE PREGUNTAS (120 ITEMS CON CONTRASTE)
+// ========================================================
 const questionsData = {
   A1: [
     {
@@ -724,6 +827,9 @@ const questionsData = {
   ]
 };
 
+// ========================================================
+// 2. MOTOR DE AUDIO Y RECONOCIMIENTO DE VOZ
+// ========================================================
 let availableVoices = [];
 function loadVoices() {
   if ('speechSynthesis' in window) {
@@ -921,7 +1027,7 @@ if (SpeechRecognitionAPI) {
 
 function startVoiceRecognition(qId) {
   if (!persistentRecognizer) {
-    alert("El reconocimiento de voz requiere Google Chrome, Microsoft Edge o Safari compatible. En Firefox el reconocimiento de voz web nativo se encuentra deshabilitado por el fabricante.");
+    alert("El reconocimiento de voz requiere Google Chrome, Microsoft Edge o Safari compatible.");
     return;
   }
 
@@ -944,6 +1050,29 @@ function startVoiceRecognition(qId) {
   }
 }
 
+// ========================================================
+// 3. PERSISTENCIA LOCAL Y GESTIÓN DE SESIONES
+// ========================================================
+const STORAGE_KEY = "SIMULADOR_ESPANOL_SESSIONS";
+const ADMIN_KEY = "ClaudioAdminBudnikar";
+
+function getStoredSessions() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveSessionRecord(sessionData) {
+  const sessions = getStoredSessions();
+  sessions.unshift(sessionData);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+}
+
+// ========================================================
+// 4. CONTROL GENERAL DE USUARIO / ADMIN
+// ========================================================
 let currentUserName = "";
 let currentLevel = "A1";
 const userResponses = {};
@@ -951,26 +1080,34 @@ const userResponses = {};
 function handleStart(event) {
   event.preventDefault();
   const input = document.getElementById("user-name-input");
-  const name = input.value.trim();
-  if (!name) return;
+  const val = input.value.trim();
+  if (!val) return;
 
-  currentUserName = name;
-  document.getElementById("display-user-name").textContent = currentUserName;
-  document.getElementById("login-view").style.display = "none";
-  document.getElementById("app-view").style.display = "block";
-
-  selectLevel("A1");
+  if (val === ADMIN_KEY) {
+    // Ingreso como Administrador
+    document.getElementById("login-view").style.display = "none";
+    document.getElementById("app-view").style.display = "none";
+    document.getElementById("admin-view").style.display = "block";
+    renderAdminRecords();
+  } else {
+    // Ingreso como Estudiante
+    currentUserName = val;
+    document.getElementById("display-user-name").textContent = currentUserName;
+    document.getElementById("login-view").style.display = "none";
+    document.getElementById("admin-view").style.display = "none";
+    document.getElementById("app-view").style.display = "block";
+    selectLevel("A1");
+  }
 }
 
 function handleLogout() {
-  if (confirm("¿Deseas cambiar de alumno? Las respuestas actuales se reiniciarán.")) {
-    currentUserName = "";
-    Object.keys(userResponses).forEach(k => delete userResponses[k]);
-    document.getElementById("user-name-input").value = "";
-    document.getElementById("app-view").style.display = "none";
-    document.getElementById("login-view").style.display = "block";
-    try { if (persistentRecognizer) persistentRecognizer.abort(); } catch (e) {}
-  }
+  currentUserName = "";
+  Object.keys(userResponses).forEach(k => delete userResponses[k]);
+  document.getElementById("user-name-input").value = "";
+  document.getElementById("app-view").style.display = "none";
+  document.getElementById("admin-view").style.display = "none";
+  document.getElementById("login-view").style.display = "block";
+  try { if (persistentRecognizer) persistentRecognizer.abort(); } catch (e) {}
 }
 
 function selectLevel(level) {
@@ -1094,6 +1231,9 @@ function resetCurrentLevel() {
   updateScore();
 }
 
+// ========================================================
+// 5. CIERRE DE SESIÓN, REGISTRO Y REPORTE
+// ========================================================
 function openSummaryModal() {
   const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
   const tbody = document.getElementById("summary-tbody");
@@ -1105,6 +1245,8 @@ function openSummaryModal() {
   let grandTotalQuestions = 0;
   let grandTotalAnswered = 0;
   let grandTotalCorrect = 0;
+
+  const sessionLevelsDetail = {};
 
   levels.forEach(lvl => {
     const list = questionsData[lvl] || [];
@@ -1137,6 +1279,16 @@ function openSummaryModal() {
 
     const percent = totalQ > 0 ? Number(((correct / totalQ) * 100).toFixed(1)) : 0;
     const isPassed = percent >= 75.0;
+
+    sessionLevelsDetail[lvl] = {
+      answered,
+      total: totalQ,
+      correct,
+      percent,
+      passed: isPassed,
+      correctIds,
+      wrongIds
+    };
 
     const statusBadge = isPassed
       ? `<span class="status-badge status-pass">Aprobado</span>`
@@ -1183,6 +1335,7 @@ function openSummaryModal() {
 
   const grandPercent = grandTotalQuestions > 0 ? Number(((grandTotalCorrect / grandTotalQuestions) * 100).toFixed(1)) : 0;
   const globalPassed = grandPercent >= 75.0;
+
   const totalTr = document.createElement("tr");
   totalTr.className = "total-row";
   totalTr.innerHTML = `
@@ -1194,10 +1347,25 @@ function openSummaryModal() {
   `;
   tbody.appendChild(totalTr);
 
-  document.getElementById("report-user-name").textContent = currentUserName || "Estudiante";
   const now = new Date();
-  document.getElementById("report-date").textContent = "Fecha de emisión: " + now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
+  const dateStr = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"});
 
+  // Guardar registro de la sesión en el almacenamiento local
+  if (grandTotalAnswered > 0) {
+    saveSessionRecord({
+      date: dateStr,
+      student: currentUserName,
+      totalAnswered: grandTotalAnswered,
+      totalCorrect: grandTotalCorrect,
+      totalQuestions: grandTotalQuestions,
+      percent: grandPercent,
+      passed: globalPassed,
+      levels: sessionLevelsDetail
+    });
+  }
+
+  document.getElementById("report-user-name").textContent = currentUserName || "Estudiante";
+  document.getElementById("report-date").textContent = "Fecha de emisión: " + dateStr;
   document.getElementById("summary-modal").classList.add("active");
 }
 
@@ -1207,7 +1375,6 @@ function closeSummaryModal() {
 
 function printSeparateWindow() {
   const reportContent = document.getElementById("printable-report").innerHTML;
-  
   const printWindow = window.open("", "_blank", "width=920,height=850");
   printWindow.document.open();
   printWindow.document.write(`
@@ -1240,14 +1407,85 @@ function printSeparateWindow() {
     <body>
       ${reportContent}
       <script>
-        window.onload = function() {
-          window.print();
-        };
+        window.onload = function() { window.print(); };
       <\/script>
     </body>
     </html>
   `);
   printWindow.document.close();
+}
+
+// ========================================================
+// 6. FUNCIONALIDADES DEL PANEL ADMINISTRADOR
+// ========================================================
+function renderAdminRecords() {
+  const tbody = document.getElementById("admin-records-tbody");
+  const filter = (document.getElementById("admin-filter").value || "").toLowerCase();
+  const sessions = getStoredSessions();
+
+  tbody.innerHTML = "";
+
+  const filtered = sessions.filter(s => (s.student || "").toLowerCase().includes(filter));
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">No se encontraron registros de evaluaciones.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(s => {
+    const tr = document.createElement("tr");
+
+    let detailBadges = "";
+    if (s.levels) {
+      for (const [lvl, dat] of Object.entries(s.levels)) {
+        if (dat.answered > 0) {
+          const cor = dat.correctIds.map(id => `<span class="detail-tag cor">${id}</span>`).join("");
+          const wro = dat.wrongIds.map(id => `<span class="detail-tag wro">${id}</span>`).join("");
+          detailBadges += `<div style="margin-bottom: 4px;"><strong>${lvl}:</strong> ${cor} ${wro}</div>`;
+        }
+      }
+    }
+
+    tr.innerHTML = `
+      <td>${s.date}</td>
+      <td><strong>${escapeHtml(s.student)}</strong></td>
+      <td>Global</td>
+      <td>${s.totalCorrect} / ${s.totalQuestions}</td>
+      <td><strong>${s.percent}%</strong></td>
+      <td>${s.passed ? '<span class="status-badge status-pass">Aprobado</span>' : '<span class="status-badge status-fail">No Aprobado</span>'}</td>
+      <td>${detailBadges || '<span style="color: var(--text-muted);">Sin detalles</span>'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function clearAllRecords() {
+  if (confirm("¿Estás seguro de que deseas eliminar permanentemente todo el historial de alumnos?")) {
+    localStorage.removeItem(STORAGE_KEY);
+    renderAdminRecords();
+  }
+}
+
+function exportRecordsToCSV() {
+  const sessions = getStoredSessions();
+  if (sessions.length === 0) {
+    alert("No hay registros para exportar.");
+    return;
+  }
+
+  let csvContent = "data:text/csv;charset=utf-8,Fecha,Alumno,Aciertos,Total,Porcentaje,Estado\n";
+  sessions.forEach(s => {
+    const estado = s.passed ? "Aprobado" : "No Aprobado";
+    csvContent += `"${s.date}","${s.student}",${s.totalCorrect},${s.totalQuestions},"${s.percent}%","${estado}"\n`;
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `Evaluaciones_Espanol_${new Date().toISOString().slice(0,10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 function escapeHtml(text) {
