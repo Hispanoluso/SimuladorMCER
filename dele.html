@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instituto Cervantes - Plataforma Oficial de Preparación DELE</title>
+  <title>Plataforma de Preparación DELE - Práctica por Niveles MCER</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -12,14 +12,14 @@
       theme: {
         extend: {
           colors: {
-            cervantes: {
-              50: '#fdf2f2',
-              100: '#fde8e8',
-              500: '#e02424',
-              600: '#c81e1e',
-              700: '#9b1c1c',
-              800: '#771d1d',
-              900: '#5c1616',
+            brand: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              500: '#e11d48',
+              600: '#be123c',
+              700: '#9f1239',
+              800: '#881337',
+              900: '#4c0519',
             }
           }
         }
@@ -31,8 +31,8 @@
   <style>
     @media print {
       body * { visibility: hidden; }
-      #printableCertificateModal, #printableCertificateModal * { visibility: visible; }
-      #printableCertificateModal {
+      #printableReportModal, #printableReportModal * { visibility: visible; }
+      #printableReportModal {
         position: absolute;
         left: 0;
         top: 0;
@@ -57,129 +57,47 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-full flex flex-col font-sans selection:bg-red-200">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-full flex flex-col font-sans selection:bg-rose-200">
 
   <!-- ========================================================================= -->
-  <!-- 1. LOGIN GATE: PANTALLA OBLIGATORIA DE ACCESO INICIAL                     -->
+  <!-- BARRA SUPERIOR DE NAVEGACIÓN Y ACCIONES                                  -->
   <!-- ========================================================================= -->
-  <div id="loginGateOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-8 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-6">
-      
-      <div class="text-center space-y-2">
-        <div class="inline-block bg-cervantes-800 text-white font-black px-4 py-1.5 rounded-xl text-2xl shadow tracking-tighter">
-          DELE
-        </div>
-        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">
-          Instituto Cervantes
-        </h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400">
-          Portal Oficial de Preparación y Evaluación DELE (MCER A1–C2)
-        </p>
-      </div>
-
-      <form id="gateLoginForm" onsubmit="handleGateLogin(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
-            Identificador o Usuario:
-          </label>
-          <input 
-            type="text" 
-            id="gateUsername" 
-            required 
-            autocomplete="username"
-            placeholder="Introduce tu identificador de usuario" 
-            class="w-full bg-slate-100 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 font-medium text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-cervantes-600 transition"
-          >
-        </div>
-
-        <div>
-          <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
-            Contraseña:
-          </label>
-          <input 
-            type="password" 
-            id="gatePassword" 
-            required 
-            autocomplete="current-password"
-            placeholder="Introduce tu clave de acceso" 
-            class="w-full bg-slate-100 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 font-medium text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-cervantes-600 transition"
-          >
-        </div>
-
-        <div id="gateErrorMessage" class="hidden p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
-          <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
-          <span id="gateErrorText">Credenciales inválidas. Comprueba tus datos.</span>
-        </div>
-
-        <button 
-          type="submit" 
-          class="w-full py-3 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl font-bold shadow-md transition flex items-center justify-center gap-2 text-sm"
-        >
-          <i class="fa-solid fa-right-to-bracket"></i>
-          <span>Identificarse en el Sistema</span>
-        </button>
-      </form>
-
-      <div class="text-center pt-2 border-t border-slate-100 dark:border-slate-800">
-        <p class="text-[11px] text-slate-400">
-          Acceso exclusivo para candidatos matriculados y personal docente.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- 2. BARRA SUPERIOR DE NAVEGACIÓN Y PERFIL                                  -->
-  <!-- ========================================================================= -->
-  <header class="bg-cervantes-800 text-white shadow-lg sticky top-0 z-40 border-b border-cervantes-900">
+  <header class="bg-brand-800 text-white shadow-lg sticky top-0 z-40 border-b border-brand-900">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('student')">
-        <div class="bg-white text-cervantes-800 font-black px-2.5 py-1 rounded text-xl shadow-md tracking-tighter">DELE</div>
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="jumpToExercise(0)">
+        <div class="bg-white text-brand-800 font-black px-2.5 py-1 rounded text-xl shadow-md tracking-tighter">DELE</div>
         <div>
           <h1 class="font-extrabold text-base sm:text-lg leading-tight flex items-center gap-2">
-            Instituto Cervantes
-            <span class="text-[10px] font-bold bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full uppercase tracking-wider">Oficial</span>
+            Plataforma de Preparación DELE
           </h1>
-          <p class="text-xs text-rose-200">Sistema Integral de Evaluación y Certificación MCER (A1–C2)</p>
+          <p class="text-xs text-rose-200">Práctica por Niveles MCER (A1 a C2)</p>
         </div>
       </div>
 
       <div class="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm">
-        <button id="navStudentHistoryBtn" onclick="openStudentHistoryModal()" class="bg-cervantes-900/90 hover:bg-cervantes-900 text-white font-semibold px-3 py-1.5 rounded-lg border border-red-700/60 shadow-sm transition flex items-center gap-1.5">
-          <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
-          <span class="hidden md:inline">Mi Histórico</span>
+        <!-- BOTÓN DINÁMICO DE CONTROL DE AUDIO (PARAR / EN REPRODUCCIÓN) -->
+        <button 
+          id="globalStopAudioBtn" 
+          onclick="stopAllSpeechAudio()" 
+          class="hidden px-3 py-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold rounded-lg shadow transition flex items-center gap-2 animate-pulse"
+          title="Detener audio en reproducción"
+        >
+          <i class="fa-solid fa-circle-stop text-sm text-red-700"></i>
+          <span>Detener Audio</span>
         </button>
 
-        <button onclick="openCurrentEvaluationReport()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5">
-          <i class="fa-solid fa-file-pdf"></i>
+        <button onclick="openCurrentEvaluationReport()" class="bg-white hover:bg-rose-50 text-brand-800 font-bold px-3.5 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf text-brand-700"></i>
           <span>Informe PDF</span>
-        </button>
-
-        <div id="adminNavTab" class="hidden">
-          <button onclick="switchView('admin')" class="bg-slate-900 hover:bg-black text-white font-bold px-3 py-1.5 rounded-lg border border-slate-700 shadow-sm transition flex items-center gap-1.5">
-            <i class="fa-solid fa-screwdriver-wrench text-amber-300"></i>
-            <span>Panel Admin</span>
-          </button>
-        </div>
-
-        <div class="bg-cervantes-900/80 text-white px-3 py-1.5 rounded-lg border border-red-700/60 flex items-center space-x-2 font-medium">
-          <i class="fa-solid fa-user-shield text-rose-300" id="userRoleIcon"></i>
-          <span id="navUserName" class="max-w-[120px] truncate font-semibold">Sin autenticar</span>
-          <span id="navUserBadge" class="bg-red-700 text-[10px] px-1.5 py-0.5 rounded font-black uppercase">DESCONECTADO</span>
-        </div>
-
-        <button onclick="logoutSession()" title="Cerrar sesión y bloquear pantalla" class="bg-rose-950/80 hover:bg-rose-950 text-rose-200 border border-rose-800/80 font-bold px-3 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
-          <span class="hidden sm:inline">Cerrar Sesión</span>
         </button>
       </div>
     </div>
 
-    <!-- Tira de Niveles A1-C2 -->
-    <div class="bg-cervantes-900 px-4 py-2 border-t border-red-800/60">
+    <!-- Barra de selección de niveles A1 - C2 -->
+    <div class="bg-brand-900 px-4 py-2 border-t border-rose-900/60">
       <div class="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto gap-2 text-xs">
         <div class="flex items-center space-x-2">
-          <span class="text-rose-300 font-bold uppercase tracking-wider whitespace-nowrap mr-2 flex items-center gap-1">
+          <span class="text-rose-200 font-bold uppercase tracking-wider whitespace-nowrap mr-2 flex items-center gap-1">
             <i class="fa-solid fa-layer-group"></i> Nivel:
           </span>
           <div class="flex space-x-1 sm:space-x-2" id="levelTabsNav"></div>
@@ -192,23 +110,22 @@
     </div>
   </header>
 
+
   <!-- ========================================================================= -->
-  <!-- 3. CONTENEDOR PRINCIPAL                                                   -->
+  <!-- CONTENEDOR PRINCIPAL: ESPACIO DE PRÁCTICA                                 -->
   <!-- ========================================================================= -->
   <main class="max-w-7xl mx-auto p-4 sm:p-6 flex-1 w-full">
-
-    <!-- VISTA 1: ESPACIO DE ESTUDIANTE -->
-    <div id="studentWorkspaceView" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
       <!-- Panel Lateral: Resumen del Nivel, Métricas, Reinicio y Cuadrícula -->
       <aside class="lg:col-span-4 bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-6">
         <div>
           <div class="flex justify-between items-start mb-3">
             <div>
-              <span id="sideLevelCategory" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-rose-100 dark:bg-rose-950 text-cervantes-700 dark:text-rose-300 rounded-md">Usuario Básico</span>
+              <span id="sideLevelCategory" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-rose-100 dark:bg-rose-950 text-brand-700 dark:text-rose-300 rounded-md">Usuario Básico</span>
               <h2 id="sideLevelTitle" class="text-lg font-extrabold text-slate-900 dark:white mt-1">Nivel A1 - Acceso</h2>
             </div>
-            <span class="bg-red-50 text-cervantes-700 dark:bg-slate-800 dark:text-rose-400 font-black text-xs px-2.5 py-1 rounded-lg border border-red-200 dark:border-slate-700">20 Ítems</span>
+            <span class="bg-rose-50 text-brand-700 dark:bg-slate-800 dark:text-rose-300 font-black text-xs px-2.5 py-1 rounded-lg border border-rose-200 dark:border-slate-700">20 Ítems</span>
           </div>
           <p id="sideLevelDescription" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
             Comprensión de avisos, carteles públicos y fórmulas inmediatas de comunicación cotidiana en español.
@@ -238,16 +155,16 @@
 
           <!-- BOTÓN DE REINICIAR NIVEL ACTUAL -->
           <div class="mb-5">
-            <button onclick="confirmResetCurrentLevel()" class="w-full py-2.5 px-3 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950 text-cervantes-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+            <button onclick="confirmResetCurrentLevel()" class="w-full py-2.5 px-3 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950 text-brand-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
               <i class="fa-solid fa-rotate-left"></i>
-              <span>Reiniciar Nivel <strong id="resetLevelLabel">A1</strong></span>
+              <span>Reiniciar Nivel <strong id="resetLevelLabel">A1</strong> (20 Ítems)</span>
             </button>
           </div>
 
           <!-- Cuadrícula de 20 Ejercicios -->
           <div class="space-y-2">
             <div class="flex justify-between items-center text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
-              <span>Cuadrícula DELE (20 Ítems)</span>
+              <span>Cuadrícula de Ítems (1 al 20)</span>
               <span class="text-[11px] text-slate-400 font-normal">Pulsa para navegar</span>
             </div>
             <div id="exerciseNumberGrid" class="grid grid-cols-5 gap-2"></div>
@@ -256,16 +173,26 @@
 
         <!-- Asistente de Audio Avanzado -->
         <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center justify-between">
-            <span><i class="fa-solid fa-headphones text-cervantes-600 mr-1.5"></i> Asistente de Voz y Audio</span>
-            <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">Voz en Español</span>
-          </h4>
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-headphones text-brand-600"></i> Asistente de Voz y Audio
+            </h4>
+            <!-- Botón secundario para detener audio si está reproduciendo -->
+            <button 
+              id="sidebarStopAudioBtn" 
+              onclick="stopAllSpeechAudio()" 
+              class="hidden text-[11px] font-bold text-red-600 dark:text-red-400 hover:underline flex items-center gap-1"
+            >
+              <i class="fa-solid fa-stop"></i> Parar Audio
+            </button>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <button onclick="readExerciseSpeech()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-semibold flex items-center justify-center gap-1.5 transition">
-              <i class="fa-solid fa-play text-cervantes-600"></i> Escuchar Ítem
+              <i class="fa-solid fa-play text-brand-600"></i> Escuchar Ítem
             </button>
-            <button id="voiceMicBtn" onclick="toggleVoiceRecognition()" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950/70 text-cervantes-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">
-              <i class="fa-solid fa-microphone text-cervantes-600" id="micIcon"></i>
+            <button id="voiceMicBtn" onclick="toggleVoiceRecognition()" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-950/70 text-brand-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 rounded-xl font-bold flex items-center justify-center gap-1.5 transition">
+              <i class="fa-solid fa-microphone text-brand-600" id="micIcon"></i>
               <span id="micButtonText">Seleccionar por Voz</span>
             </button>
           </div>
@@ -274,12 +201,12 @@
           <div id="voiceRecognitionBanner" class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs space-y-1.5">
             <div class="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400">
               <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-waveform-lines text-cervantes-600" id="voiceWaveIcon"></i> Transcripción de voz:
+                <i class="fa-solid fa-waveform-lines text-brand-600" id="voiceWaveIcon"></i> Transcripción de voz:
               </span>
               <span id="voiceMatchBadge" class="text-[10px] px-1.5 py-0.2 rounded font-black uppercase hidden"></span>
             </div>
             <p id="voiceLiveTranscript" class="text-slate-800 dark:text-slate-200 font-medium italic">
-              Pulsa el micrófono y di el número ("1", "2", "3") o lee la frase de la opción. Se preseleccionará sin confirmar.
+              Pulsa el micrófono y di el número ("1", "2", "3") o lee la frase de la opción. Solo se posicionará sin confirmar.
             </p>
             <p id="voiceFeedbackDetail" class="text-[11px] text-slate-400 dark:text-slate-500"></p>
           </div>
@@ -292,14 +219,14 @@
         <div class="bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-5">
           <div class="flex flex-wrap justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 gap-2">
             <div class="flex items-center space-x-2">
-              <span id="itemTaskBadge" class="bg-cervantes-100 dark:bg-cervantes-900/60 text-cervantes-700 dark:text-rose-300 font-extrabold text-xs px-2.5 py-1 rounded-lg">
+              <span id="itemTaskBadge" class="bg-rose-100 dark:bg-rose-950/60 text-brand-700 dark:text-rose-300 font-extrabold text-xs px-2.5 py-1 rounded-lg">
                 Tarea 1
               </span>
               <h3 id="itemTitleLabel" class="text-base font-extrabold text-slate-900 dark:text-white">Ejercicio 1 de 20</h3>
             </div>
             <div class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
               <span id="itemCompetenceLabel" class="font-medium">Comprensión de lectura</span>
-              <button onclick="readContextSpeechOnly()" title="Escuchar solo el fragmento de texto" class="text-slate-400 hover:text-cervantes-600 p-1">
+              <button onclick="readContextSpeechOnly()" title="Escuchar solo el fragmento de texto" class="text-slate-400 hover:text-brand-600 p-1">
                 <i class="fa-solid fa-volume-high text-sm"></i>
               </button>
             </div>
@@ -308,7 +235,7 @@
           <!-- Texto de Lectura -->
           <div class="bg-slate-50 dark:bg-slate-800/40 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700/80">
             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <i class="fa-solid fa-file-lines text-cervantes-600"></i> Texto Oficial del Examen:
+              <i class="fa-solid fa-file-lines text-brand-600"></i> Texto de Lectura:
             </div>
             <p id="itemContextText" class="text-slate-800 dark:text-slate-200 font-serif leading-relaxed text-sm sm:text-base italic"></p>
           </div>
@@ -330,7 +257,7 @@
               id="btnConfirmAnswer" 
               onclick="confirmCurrentSubmission()" 
               disabled 
-              class="px-5 py-2.5 bg-cervantes-700 hover:bg-cervantes-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow"
+              class="px-5 py-2.5 bg-brand-700 hover:bg-brand-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow"
             >
               <i class="fa-solid fa-check"></i>
               <span>Confirmar / Responder</span>
@@ -353,8 +280,8 @@
         <div id="tripartiteFeedbackPanel" class="hidden bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4 transition-all">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center space-x-2">
-              <i class="fa-solid fa-graduation-cap text-cervantes-600 text-lg"></i>
-              <h4 class="font-extrabold text-base text-slate-900 dark:text-white">Análisis Pedagógico Oficial DELE</h4>
+              <i class="fa-solid fa-graduation-cap text-brand-600 text-lg"></i>
+              <h4 class="font-extrabold text-base text-slate-900 dark:text-white">Análisis Pedagógico de la Pregunta</h4>
             </div>
             <span id="feedbackResultBadge" class="text-xs font-black px-3 py-1 rounded-full uppercase"></span>
           </div>
@@ -383,183 +310,21 @@
 
       </section>
     </div>
-
-    <!-- VISTA 2: PANEL DE ADMINISTRADOR DE CLAUDIO -->
-    <div id="adminWorkspaceView" class="hidden flex-col space-y-6">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Banco DELE Total</div>
-          <div class="text-2xl font-black text-slate-900 dark:text-white mt-1" id="kpiTotalItems">120</div>
-          <div class="text-xs text-slate-500 mt-0.5">20 reactivos por cada nivel (A1–C2)</div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Alumnos Registrados</div>
-          <div class="text-2xl font-black text-cervantes-600 mt-1" id="kpiRegisteredStudents">2</div>
-          <div class="text-xs text-slate-500 mt-0.5">Gestión y expedientes académicos</div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Sesiones Evaluadas</div>
-          <div class="text-2xl font-black text-emerald-600 mt-1" id="kpiArchivedSessions">3</div>
-          <div class="text-xs text-slate-500 mt-0.5">Histórico global archivado</div>
-        </div>
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
-          <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Nuevo Reactivo</div>
-            <button onclick="openExerciseModal(null)" class="mt-2 px-3 py-1.5 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition">
-              <i class="fa-solid fa-plus"></i> Crear Ítem
-            </button>
-          </div>
-          <div class="w-12 h-12 bg-rose-50 dark:bg-rose-950/40 rounded-2xl flex items-center justify-center text-cervantes-600 text-xl font-bold">
-            <i class="fa-solid fa-pen-nib"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pestañas del Panel Admin -->
-      <div class="flex border-b border-slate-200 dark:border-slate-800 gap-4 text-xs font-bold">
-        <button id="adminTabStudentsBtn" onclick="switchAdminSubTab('students')" class="pb-3 px-2 border-b-2 border-cervantes-700 text-cervantes-700 dark:text-rose-400 flex items-center gap-2">
-          <i class="fa-solid fa-users"></i> Gestión de Alumnos y Expedientes
-        </button>
-        <button id="adminTabExercisesBtn" onclick="switchAdminSubTab('exercises')" class="pb-3 px-2 border-b-2 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-list-check"></i> Banco de 120 Ejercicios (CRUD)
-        </button>
-      </div>
-
-      <!-- Subpestaña 1: Alumnos -->
-      <div id="adminSubTabStudents" class="space-y-4">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
-          <div class="flex flex-wrap justify-between items-center gap-4">
-            <div>
-              <h3 class="text-lg font-bold text-slate-900 dark:text-white">Alumnos Inscritos y Expedientes</h3>
-              <p class="text-xs text-slate-500">Supervisa las calificaciones, registra aspirantes o revisa el histórico individual.</p>
-            </div>
-            <div class="flex space-x-2">
-              <button onclick="openRegisterStudentAdminModal()" class="px-3.5 py-2 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition">
-                <i class="fa-solid fa-user-plus"></i> Registrar Alumno
-              </button>
-              <button onclick="switchView('student')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Modo Alumno
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto custom-scroll">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider font-bold">
-                  <th class="py-3 px-3">Candidato</th>
-                  <th class="py-3 px-3">Usuario</th>
-                  <th class="py-3 px-3 text-center">Sesiones</th>
-                  <th class="py-3 px-3 text-center">Última Tasa</th>
-                  <th class="py-3 px-3 text-center">Último Dictamen</th>
-                  <th class="py-3 px-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="adminStudentsTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Subpestaña 2: CRUD Ejercicios -->
-      <div id="adminSubTabExercises" class="hidden space-y-4">
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
-          <div class="flex flex-wrap justify-between items-center gap-4">
-            <div>
-              <h3 class="text-lg font-bold text-slate-900 dark:text-white">Mantenimiento de Reactivos DELE (CRUD)</h3>
-              <p class="text-xs text-slate-500">Edición, alta y baja de ejercicios oficiales clasificados por nivel.</p>
-            </div>
-            <div class="flex items-center space-x-2">
-              <select id="adminLevelFilterSelect" onchange="renderAdminItemsTable()" class="bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs font-semibold px-3 py-2 text-slate-800 dark:text-slate-200">
-                <option value="ALL">Todos los Niveles</option>
-                <option value="A1">Nivel A1</option>
-                <option value="A2">Nivel A2</option>
-                <option value="B1">Nivel B1</option>
-                <option value="B2">Nivel B2</option>
-                <option value="C1">Nivel C1</option>
-                <option value="C2">Nivel C2</option>
-              </select>
-              <button onclick="restoreOfficialCurriculumBank()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition" title="Restablecer los 120 ejercicios originales">
-                <i class="fa-solid fa-rotate-left mr-1"></i> Restaurar Banco
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto custom-scroll">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider font-bold">
-                  <th class="py-3 px-3">Nivel</th>
-                  <th class="py-3 px-3">Tarea</th>
-                  <th class="py-3 px-3">Pregunta / Texto</th>
-                  <th class="py-3 px-3 text-center">Opción Correcta</th>
-                  <th class="py-3 px-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="adminExercisesTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div>
   </main>
 
+
   <!-- ========================================================================= -->
-  <!-- 4. MODALES (HISTORIAL, INFORME PDF, CRUD)                                 -->
+  <!-- MODAL: INFORME DE SESIÓN / DESCARGA PDF CORREGIDO                         -->
   <!-- ========================================================================= -->
-
-  <!-- Modal Historial de Sesiones del Alumno -->
-  <div id="studentHistoryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[90vh] flex flex-col space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-        <div>
-          <h3 class="font-extrabold text-slate-900 dark:text-white text-base flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-cervantes-600"></i>
-            Histórico Académico y Evaluaciones DELE
-          </h3>
-          <p class="text-xs text-slate-500">Expediente de sesiones guardadas del alumno: <strong id="historyModalStudentName" class="text-slate-800 dark:text-slate-200"></strong></p>
-        </div>
-        <div class="flex items-center space-x-2">
-          <button onclick="saveCurrentLevelSession()" class="px-3.5 py-2 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition">
-            <i class="fa-solid fa-floppy-disk"></i> Guardar Sesión Actual
-          </button>
-          <button onclick="closeStudentHistoryModal()" class="text-slate-400 hover:text-slate-600 text-sm p-1">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="overflow-y-auto custom-scroll flex-1">
-        <table class="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider font-bold">
-              <th class="py-2.5 px-3">Fecha y Hora</th>
-              <th class="py-2.5 px-3 text-center">Nivel</th>
-              <th class="py-2.5 px-3 text-center">Respondidos</th>
-              <th class="py-2.5 px-3 text-center">Aciertos</th>
-              <th class="py-2.5 px-3 text-center">Errores</th>
-              <th class="py-2.5 px-3 text-center">% Éxito</th>
-              <th class="py-2.5 px-3 text-center">Dictamen</th>
-              <th class="py-2.5 px-3 text-right">Informe PDF</th>
-            </tr>
-          </thead>
-          <tbody id="studentHistoryTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Informe Certificado Imprimible / PDF -->
-  <div id="printableCertificateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-3xl w-full p-8 shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col space-y-6 text-slate-800">
+  <div id="printableReportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-8 shadow-2xl border border-slate-200 max-h-[94vh] flex flex-col space-y-6 text-slate-800">
       
       <div class="flex justify-between items-center pb-3 border-b border-slate-200 no-print">
-        <span class="text-xs font-bold uppercase tracking-wider text-cervantes-700 flex items-center gap-1.5">
-          <i class="fa-solid fa-certificate"></i> Vista Previa del Certificado / Informe
+        <span class="text-xs font-bold uppercase tracking-wider text-brand-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-file-invoice"></i> Informe de Evaluación y Rendimiento
         </span>
         <div class="flex items-center space-x-2">
-          <button onclick="window.print()" class="px-4 py-2 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow transition">
+          <button onclick="window.print()" class="px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow transition">
             <i class="fa-solid fa-print"></i> Imprimir / Guardar en PDF
           </button>
           <button onclick="closeEvaluationReportModal()" class="text-slate-400 hover:text-slate-600 text-sm p-1">
@@ -569,44 +334,79 @@
       </div>
 
       <div class="overflow-y-auto custom-scroll flex-1 space-y-6 px-1">
-        <div class="border-b-2 border-cervantes-800 pb-4 flex justify-between items-start">
+        <div class="border-b-2 border-brand-800 pb-4 flex justify-between items-start">
           <div>
-            <div class="text-2xl font-black text-cervantes-800 tracking-tight">INSTITUTO CERVANTES</div>
-            <div class="text-sm font-bold text-slate-800">Diploma de Español como Lengua Extranjera (DELE)</div>
-            <p class="text-xs text-slate-500">Informe Oficial de Diagnóstico Formativo y Preparación de Examen</p>
+            <div class="text-2xl font-black text-brand-800 tracking-tight">PREPARACIÓN DE EXAMEN DELE</div>
+            <div class="text-sm font-bold text-slate-800">Informe General y Rendimiento por Niveles MCER</div>
+            <p class="text-xs text-slate-500">Evaluación Formativa y Diagnóstico de Competencias en Lengua Española</p>
           </div>
           <div class="text-right text-xs text-slate-600">
-            <p><strong>Candidato:</strong> <span id="reportCandidateName">Candidato DELE</span></p>
-            <p><strong>Fecha de Expedición:</strong> <span id="reportEmissionDate">01/10/2026</span></p>
-            <p><strong>Nivel Evaluado:</strong> <span id="reportActiveLevelBadge" class="font-extrabold text-cervantes-800 text-sm">A1</span></p>
+            <p><strong>Fecha de Emisión:</strong> <span id="reportEmissionDate">02/10/2026</span></p>
+            <p><strong>Nivel Activo en Práctica:</strong> <span id="reportActiveLevelBadge" class="font-extrabold text-brand-800 text-sm">A1</span></p>
           </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4 text-center">
-          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Ítems Evaluados</span>
-            <div class="text-2xl font-black text-slate-900 mt-1" id="reportMetricAnsweredRatio">0 / 20</div>
+        <!-- Métricas Globales de la Sesión -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Respondidos</span>
+            <div class="text-2xl font-black text-slate-900 mt-1" id="reportMetricGlobalAnswered">0 / 120</div>
+            <div class="text-[10px] text-slate-400 mt-0.5" id="reportMetricGlobalProgressRatio">0% completado</div>
           </div>
-          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Rendimiento Obtenido</span>
+          <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Aciertos</span>
+            <div class="text-2xl font-black text-emerald-600 mt-1" id="reportMetricGlobalCorrect">0</div>
+            <div class="text-[10px] text-slate-400 mt-0.5" id="reportMetricGlobalWrong">0 errores</div>
+          </div>
+          <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Rendimiento Obtenido</span>
             <div class="text-2xl font-black text-slate-900 mt-1" id="reportMetricSuccessRate">0%</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">% de aciertos / respondidos</div>
           </div>
-          <div class="p-4 rounded-2xl border" id="reportMetricVerdictCard">
-            <span class="text-xs font-bold uppercase tracking-wider" id="reportMetricVerdictTitle">Dictamen Oficial</span>
-            <div class="text-2xl font-black mt-1" id="reportMetricVerdictStatus">NO INICIADO</div>
+          <div class="p-3.5 rounded-2xl border" id="reportMetricVerdictCard">
+            <span class="text-[11px] font-bold uppercase tracking-wider" id="reportMetricVerdictTitle">Dictamen Global</span>
+            <div class="text-xl font-black mt-1" id="reportMetricVerdictStatus">SIN INICIAR</div>
+            <div class="text-[10px] opacity-75 mt-0.5" id="reportMetricVerdictThreshold">Criterio: &ge; 70%</div>
           </div>
         </div>
 
+        <!-- Tabla Resumen por Niveles MCER (A1 a C2) -->
         <div class="space-y-2">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Desglose de Competencias y Pruebas</h4>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+            <span>Rendimiento Comparativo por Niveles MCER (20 Ítems por Nivel)</span>
+            <span class="text-[11px] text-slate-500 normal-case font-medium">Umbral mínimo para APTO: 70%</span>
+          </h4>
           <table class="w-full text-left border-collapse text-xs">
             <thead>
               <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 uppercase">
-                <th class="py-2.5 px-3">Prueba / Tarea</th>
-                <th class="py-2.5 px-3">Competencia Clave MCER</th>
+                <th class="py-2.5 px-3">Nivel</th>
+                <th class="py-2.5 px-3">Competencia Principal</th>
                 <th class="py-2.5 px-3 text-center">Respondidos</th>
                 <th class="py-2.5 px-3 text-center">Aciertos</th>
-                <th class="py-2.5 px-3 text-center">% Tasa</th>
+                <th class="py-2.5 px-3 text-center">Errores</th>
+                <th class="py-2.5 px-3 text-center">% Rendimiento</th>
+                <th class="py-2.5 px-3 text-center">% del Nivel</th>
+                <th class="py-2.5 px-3 text-center">Dictamen</th>
+              </tr>
+            </thead>
+            <tbody id="reportLevelsTableBody" class="divide-y divide-slate-200"></tbody>
+          </table>
+        </div>
+
+        <!-- Desglose por Tareas del Nivel Activo -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
+            Desglose Específico del Nivel Activo (<span id="reportActiveLevelSubTitle">A1</span>)
+          </h4>
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 uppercase">
+                <th class="py-2.5 px-3">Tarea / Tipo</th>
+                <th class="py-2.5 px-3">Destreza Evaluada</th>
+                <th class="py-2.5 px-3 text-center">Respondidos</th>
+                <th class="py-2.5 px-3 text-center">Aciertos</th>
+                <th class="py-2.5 px-3 text-center">Errores</th>
+                <th class="py-2.5 px-3 text-center">% Tasa de Éxito</th>
               </tr>
             </thead>
             <tbody id="reportCompetenciesTableBody" class="divide-y divide-slate-200"></tbody>
@@ -615,144 +415,22 @@
 
         <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5 text-xs text-slate-700">
           <div class="font-bold text-slate-900 uppercase flex items-center gap-1.5">
-            <i class="fa-solid fa-clipboard-check text-cervantes-600"></i> Observaciones Pedagógicas del Tribunal:
+            <i class="fa-solid fa-clipboard-check text-brand-600"></i> Observaciones Pedagógicas y Diagnóstico:
           </div>
           <p id="reportPedagogicalNotes" class="leading-relaxed">
-            Completa más preguntas para recibir un dictamen con validez metodológica en el marco del Instituto Cervantes.
+            Completa más preguntas para recibir un dictamen con validez metodológica en el marco del MCER.
           </p>
         </div>
 
         <div class="pt-8 flex justify-between items-end text-xs text-slate-500">
           <div class="border-t border-slate-300 w-48 text-center pt-2">Firma del Candidato</div>
           <div class="text-center">
-            <div class="font-serif font-black text-cervantes-800 text-sm tracking-widest">DELE CERVANTES</div>
-            <div class="text-[10px]">Validación Oficial Automatizada</div>
+            <div class="font-serif font-black text-brand-800 text-sm tracking-widest">PREPARADOR DELE</div>
+            <div class="text-[10px]">Diagnóstico Automatizado</div>
           </div>
-          <div class="border-t border-slate-300 w-48 text-center pt-2">Comisión de Calificación</div>
+          <div class="border-t border-slate-300 w-48 text-center pt-2">Evaluación del Sistema</div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal Admin: Crear / Editar Ejercicio -->
-  <div id="exerciseEditModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[90vh] flex flex-col space-y-4">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
-        <h3 id="exerciseEditModalTitle" class="font-bold text-slate-900 dark:text-white text-base">Crear / Editar Ejercicio DELE</h3>
-        <button onclick="closeExerciseModal()" class="text-slate-400 hover:text-slate-600 text-sm">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form id="exerciseForm" onsubmit="handleSaveExerciseSubmit(event)" class="space-y-3 text-xs overflow-y-auto custom-scroll pr-1">
-        <input type="hidden" id="editItemLevel">
-        <input type="hidden" id="editItemIndex">
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold mb-1">Nivel MCER:</label>
-            <select id="editLevelSelect" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none font-bold">
-              <option value="A1">Nivel A1</option>
-              <option value="A2">Nivel A2</option>
-              <option value="B1">Nivel B1</option>
-              <option value="B2">Nivel B2</option>
-              <option value="C1">Nivel C1</option>
-              <option value="C2">Nivel C2</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold mb-1">Tarea Oficial:</label>
-            <input type="text" id="editTaskName" required placeholder="Ej: Tarea 1: Comprensión de Avisos" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold mb-1">Texto de Lectura / Contexto:</label>
-          <textarea id="editContext" rows="3" required placeholder="Texto oficial de lectura..." class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none"></textarea>
-        </div>
-
-        <div>
-          <label class="block font-semibold mb-1">Pregunta / Enunciado:</label>
-          <input type="text" id="editQuestion" required placeholder="¿Qué indica el texto...?" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none font-semibold">
-        </div>
-
-        <!-- 3 Opciones Numéricas -->
-        <div class="space-y-2">
-          <label class="block font-semibold">Opciones de Respuesta (1, 2, 3):</label>
-          <div class="flex items-center space-x-2">
-            <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">1</span>
-            <input type="text" id="editOpt1" required class="flex-1 bg-slate-100 dark:bg-slate-800 p-2 rounded-xl border-none">
-          </div>
-          <div class="flex items-center space-x-2">
-            <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">2</span>
-            <input type="text" id="editOpt2" required class="flex-1 bg-slate-100 dark:bg-slate-800 p-2 rounded-xl border-none">
-          </div>
-          <div class="flex items-center space-x-2">
-            <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">3</span>
-            <input type="text" id="editOpt3" required class="flex-1 bg-slate-100 dark:bg-slate-800 p-2 rounded-xl border-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold mb-1">Opción Correcta:</label>
-          <select id="editCorrectIndex" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none font-bold text-emerald-600">
-            <option value="0">Opción 1</option>
-            <option value="1">Opción 2</option>
-            <option value="2">Opción 3</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block font-semibold mb-1 text-emerald-600">1. Justificación de la Opción Correcta:</label>
-          <textarea id="editExplCorrect" rows="2" required class="w-full bg-slate-100 dark:bg-slate-800 p-2 rounded-xl border-none"></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold mb-1 text-amber-600">2. Análisis de Distractores (Trampas DELE):</label>
-          <textarea id="editExplDistractors" rows="2" required class="w-full bg-slate-100 dark:bg-slate-800 p-2 rounded-xl border-none"></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold mb-1 text-sky-600">3. Regla Gramatical o Competencia Pragmática:</label>
-          <textarea id="editExplGrammar" rows="2" required class="w-full bg-slate-100 dark:bg-slate-800 p-2 rounded-xl border-none"></textarea>
-        </div>
-
-        <div class="pt-3 flex justify-end space-x-2">
-          <button type="button" onclick="closeExerciseModal()" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl font-bold shadow">Guardar Ítem</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Admin: Registrar / Editar Alumno -->
-  <div id="adminStudentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
-        <h3 id="adminStudentModalTitle" class="font-bold text-slate-900 dark:text-white text-base">Registrar Nuevo Alumno</h3>
-        <button onclick="closeAdminStudentModal()" class="text-slate-400 hover:text-slate-600 text-sm">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form id="adminStudentForm" onsubmit="handleSaveStudentAdmin(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="adminStudentEditId">
-        <div>
-          <label class="block font-semibold mb-1">Nombre Completo del Candidato:</label>
-          <input type="text" id="adminStudentName" required placeholder="Ej: Elena Barrenechea" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none font-medium">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Nombre de Usuario:</label>
-          <input type="text" id="adminStudentUsername" required placeholder="Ej: elena.dele" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none font-medium">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Contraseña:</label>
-          <input type="password" id="adminStudentPassword" required placeholder="Clave de acceso" class="w-full bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl border-none font-medium">
-        </div>
-
-        <div class="pt-3 flex justify-end space-x-2">
-          <button type="button" onclick="closeAdminStudentModal()" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 bg-cervantes-700 hover:bg-cervantes-800 text-white rounded-xl font-bold">Guardar Alumno</button>
-        </div>
-      </form>
     </div>
   </div>
 
@@ -764,11 +442,9 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- 5. LÓGICA Y BANCO DE 120 REACTIVOS OFICIALES                              -->
-  <!-- ========================================================================= -->
+
   <script>
-    const OFFICIAL_120_EXERCISES_BANK = {
+    const COMPLETE_120_EXERCISES_BANK = {
       A1: [
         {
           id: "A1-01", task: "Tarea 1: Carteles y Avisos", comp: "Comprensión de lectura",
@@ -1983,128 +1659,29 @@
       ]
     };
 
-    const CLAUDIO_ADMIN_CREDENTIALS = {
-      username: "ClaudioAdminBudnikar",
-      password: "12345"
-    };
-    
-    const INITIAL_STUDENTS = [
-      {
-        id: "std-001",
-        name: "Sofía Delgado Morales",
-        username: "sofia.dele",
-        password: "cervantes123",
-        registeredAt: "2026-09-10T11:00:00.000Z",
-        sessions: [
-          {
-            id: "sess-sofia-01",
-            date: "2026-09-18T16:45:00.000Z",
-            level: "B1",
-            totalAnswered: 20,
-            correct: 17,
-            wrong: 3,
-            percentage: 85,
-            verdict: "APTO",
-            competence: "Comprensión de lectura y lengua estándar"
-          },
-          {
-            id: "sess-sofia-02",
-            date: "2026-09-25T10:15:00.000Z",
-            level: "B2",
-            totalAnswered: 20,
-            correct: 15,
-            wrong: 5,
-            percentage: 75,
-            verdict: "APTO",
-            competence: "Discurso estructurado y régimen verbal"
-          }
-        ]
-      },
-      {
-        id: "std-002",
-        name: "Mateo Rinaldi",
-        username: "mateo.dele",
-        password: "cervantes123",
-        registeredAt: "2026-09-15T09:30:00.000Z",
-        sessions: [
-          {
-            id: "sess-mateo-01",
-            date: "2026-09-28T18:20:00.000Z",
-            level: "A2",
-            totalAnswered: 20,
-            correct: 18,
-            wrong: 2,
-            percentage: 90,
-            verdict: "APTO",
-            competence: "Comprensión de correspondencia y relatos"
-          }
-        ]
-      },
-
-     {
-        id: "std-003",
-        name: "Julia Ferreira Pimenta",
-        username: "Julia Ferreira Pimenta",
-        password: "123",
-        registeredAt: "2026-09-15T09:30:00.000Z",
-      }, 
-
-
-    {
-        id: "std-004",
-        name: "German Alfredo Budnikar",
-        username: "German Alfredo Budnikar",
-        password: "123",
-        registeredAt: "2026-09-15T09:30:00.000Z",
-      },
-    
-    {
-        id: "std-005",
-        name: "Marina Aime Budnikar",
-        username: "Marina Aime Budnikar",
-        password: "123",
-        registeredAt: "2026-09-15T09:30:00.000Z",
-      }, 
-
-    {
-        id: "std-006",
-        name: "Nora Carmen Milmann",
-        username: "Nora Carmen Milmann",
-        password: "123",
-        registeredAt: "2026-09-15T09:30:00.000Z",
-      } 
-    ];
-
-    // Global application state
-    let appCurriculumBank = JSON.parse(localStorage.getItem('dele_cervantes_curriculum_120')) || OFFICIAL_120_EXERCISES_BANK;
-    let registeredStudents = JSON.parse(localStorage.getItem('dele_registered_students_list')) || INITIAL_STUDENTS;
-    
-    let currentRole = null; 
-    let currentStudentName = null;
-    let currentStudentUsername = null;
-    let isAuthenticated = false;
-
+    // Estado en memoria de la sesión
     let currentLevel = "A1";
-    let currentExerciseIndex = 0; 
+    let currentExerciseIndex = 0;
     let userSessionAnswers = {};
-    let pendingPreselectedIndex = null; // Stores focused option before user hits submit
+    let pendingPreselectedIndex = null;
 
+    // Variables de síntesis y reconocimiento de voz
     let speechSynth = window.speechSynthesis;
     let selectedSpanishVoice = null;
     let speechRecognitionInstance = null;
     let isMicListening = false;
+    let isAudioSpeaking = false;
 
     window.addEventListener("DOMContentLoaded", () => {
-      syncDatabaseStorage();
-      syncStudentsStorage();
       initSpeechRecognition();
       setupSpanishVoices();
       if (speechSynth && speechSynth.onvoiceschanged !== undefined) {
         speechSynth.onvoiceschanged = setupSpanishVoices;
       }
-      enforceLoginGate();
+      renderLevelTabs();
+      loadLevelWorkspace(currentLevel);
 
-      // Keyboard shortcut: Enter key triggers manual submission if option is preselected
+      // Atajo de teclado: pulsar Enter ejecuta la confirmación manual
       window.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !e.target.matches("input, textarea, select")) {
           const confirmBtn = document.getElementById("btnConfirmAnswer");
@@ -2115,137 +1692,85 @@
       });
     });
 
-    function enforceLoginGate() {
-      isAuthenticated = false;
-      currentRole = null;
-      currentStudentName = null;
-      currentStudentUsername = null;
-      userSessionAnswers = {};
-      pendingPreselectedIndex = null;
-
-      document.getElementById("loginGateOverlay").classList.remove("hidden");
-      document.getElementById("gateUsername").value = "";
-      document.getElementById("gatePassword").value = "";
-      document.getElementById("gateErrorMessage").classList.add("hidden");
-      updateUserInterfaceState();
+    function setupSpanishVoices() {
+      if (!speechSynth) return;
+      const voices = speechSynth.getVoices();
+      const esVoice = voices.find(v => v.lang.startsWith("es-") || v.lang.includes("es"));
+      if (esVoice) selectedSpanishVoice = esVoice;
     }
 
-    function handleGateLogin(event) {
-      event.preventDefault();
-      const userVal = document.getElementById("gateUsername").value.trim();
-      const pwdVal = document.getElementById("gatePassword").value;
-      const errBox = document.getElementById("gateErrorMessage");
-      const errText = document.getElementById("gateErrorText");
+    // ==========================================
+    // CONTROL DINÁMICO DE AUDIO Y PARADA INMEDIATA
+    // ==========================================
+    function updateAudioControlsState(speaking) {
+      isAudioSpeaking = speaking;
+      const globalBtn = document.getElementById("globalStopAudioBtn");
+      const sideBtn = document.getElementById("sidebarStopAudioBtn");
 
-      // Verify Claudio Admin credentials
-      if (userVal === CLAUDIO_ADMIN_CREDENTIALS.username && pwdVal === CLAUDIO_ADMIN_CREDENTIALS.password) {
-        isAuthenticated = true;
-        currentRole = "admin";
-        currentStudentName = "Claudio (Director DELE)";
-        currentStudentUsername = CLAUDIO_ADMIN_CREDENTIALS.username;
-
-        document.getElementById("loginGateOverlay").classList.add("hidden");
-        updateUserInterfaceState();
-        renderLevelTabs();
-        switchView("admin");
-        showToast("Acceso concedido como Administrador Claudio", "fa-user-shield");
-        return;
-      }
-
-      // Verify registered students
-      const student = registeredStudents.find(
-        s => (s.username.toLowerCase() === userVal.toLowerCase() || s.name.toLowerCase() === userVal.toLowerCase()) && s.password === pwdVal
-      );
-
-      if (student) {
-        isAuthenticated = true;
-        currentRole = "student";
-        currentStudentName = student.name;
-        currentStudentUsername = student.username;
-
-        document.getElementById("loginGateOverlay").classList.add("hidden");
-        updateUserInterfaceState();
-        renderLevelTabs();
-        loadLevelWorkspace(currentLevel);
-        switchView("student");
-        showToast(`Bienvenido/a, ${student.name}`, "fa-user-check");
-        return;
-      }
-
-      errBox.classList.remove("hidden");
-      errText.textContent = "Credenciales incorrectas. Verifique sus datos de acceso.";
-    }
-
-    function logoutSession() {
-      if (speechSynth) speechSynth.cancel();
-      if (speechRecognitionInstance && isMicListening) speechRecognitionInstance.stop();
-      enforceLoginGate();
-      showToast("Sesión finalizada. Identifíquese de nuevo.", "fa-arrow-right-from-bracket");
-    }
-
-    function syncDatabaseStorage() {
-      localStorage.setItem('dele_cervantes_curriculum_120', JSON.stringify(appCurriculumBank));
-    }
-
-    function syncStudentsStorage() {
-      localStorage.setItem('dele_registered_students_list', JSON.stringify(registeredStudents));
-    }
-
-    function updateUserInterfaceState() {
-      const nameElem = document.getElementById("navUserName");
-      const roleBadge = document.getElementById("navUserBadge");
-      const adminNav = document.getElementById("adminNavTab");
-      const historyBtn = document.getElementById("navStudentHistoryBtn");
-      const roleIcon = document.getElementById("userRoleIcon");
-
-      if (!isAuthenticated) {
-        nameElem.textContent = "Sin autenticar";
-        roleBadge.textContent = "DESCONECTADO";
-        roleBadge.className = "bg-slate-700 text-white text-[10px] px-1.5 py-0.5 rounded font-black uppercase";
-        adminNav.classList.add("hidden");
-        historyBtn.classList.add("hidden");
-        roleIcon.className = "fa-solid fa-lock text-slate-400";
-        return;
-      }
-
-      nameElem.textContent = currentStudentName;
-
-      if (currentRole === "admin") {
-        roleBadge.textContent = "ADMIN";
-        roleBadge.className = "bg-amber-400 text-slate-900 text-[10px] px-1.5 py-0.5 rounded font-black uppercase";
-        adminNav.classList.remove("hidden");
-        historyBtn.classList.add("hidden");
-        roleIcon.className = "fa-solid fa-crown text-amber-300";
+      if (speaking) {
+        if (globalBtn) globalBtn.classList.remove("hidden");
+        if (sideBtn) sideBtn.classList.remove("hidden");
       } else {
-        roleBadge.textContent = "ALUMNO";
-        roleBadge.className = "bg-red-700 text-white text-[10px] px-1.5 py-0.5 rounded font-black uppercase";
-        adminNav.classList.add("hidden");
-        historyBtn.classList.remove("hidden");
-        roleIcon.className = "fa-solid fa-user-graduate text-rose-300";
+        if (globalBtn) globalBtn.classList.add("hidden");
+        if (sideBtn) sideBtn.classList.add("hidden");
       }
     }
 
-    function switchView(view) {
-      const studentWorkspace = document.getElementById("studentWorkspaceView");
-      const adminWorkspace = document.getElementById("adminWorkspaceView");
-
-      if (view === "admin") {
-        if (currentRole !== "admin") {
-          showToast("Debes iniciar sesión con las credenciales de Administrador.", "fa-lock");
-          enforceLoginGate();
-          return;
-        }
-        studentWorkspace.classList.add("hidden");
-        adminWorkspace.classList.remove("hidden");
-        renderAdminStudentsTable();
-        renderAdminItemsTable();
-      } else {
-        adminWorkspace.classList.add("hidden");
-        studentWorkspace.classList.remove("hidden");
-        loadLevelWorkspace(currentLevel);
+    function stopAllSpeechAudio() {
+      if (speechSynth) {
+        speechSynth.cancel();
       }
+      updateAudioControlsState(false);
+      showToast("Audio detenido.", "fa-circle-stop");
     }
 
+    function speakText(text) {
+      if (!speechSynth) {
+        showToast("Síntesis de voz no disponible en este navegador.", "fa-volume-xmark");
+        return;
+      }
+      speechSynth.cancel();
+      updateAudioControlsState(false);
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      if (selectedSpanishVoice) utterance.voice = selectedSpanishVoice;
+      utterance.lang = "es-ES";
+      utterance.rate = 0.95;
+
+      utterance.onstart = () => {
+        updateAudioControlsState(true);
+      };
+
+      utterance.onend = () => {
+        updateAudioControlsState(false);
+      };
+
+      utterance.onerror = () => {
+        updateAudioControlsState(false);
+      };
+
+      speechSynth.speak(utterance);
+    }
+
+    function readExerciseSpeech() {
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
+      const item = exercises[currentExerciseIndex];
+      if (!item) return;
+
+      const fullSpeech = `${item.context}. Pregunta: ${item.question}. Opción 1: ${item.options[0]}. Opción 2: ${item.options[1]}. Opción 3: ${item.options[2]}.`;
+      speakText(fullSpeech);
+    }
+
+    function readContextSpeechOnly() {
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
+      const item = exercises[currentExerciseIndex];
+      if (!item) return;
+      speakText(item.context);
+    }
+
+    // ==========================================
+    // GESTIÓN DE NIVELES Y NAVEGACIÓN
+    // ==========================================
     function renderLevelTabs() {
       const container = document.getElementById("levelTabsNav");
       container.innerHTML = "";
@@ -2255,11 +1780,11 @@
         const btn = document.createElement("button");
         btn.id = `btn-lvl-${lvl}`;
         const isActive = (lvl === currentLevel);
-        
+
         btn.className = `px-3.5 py-1 rounded-md font-extrabold text-xs transition shadow-sm ${
-          isActive 
-            ? "bg-white text-cervantes-900 shadow-md ring-2 ring-amber-400" 
-            : "bg-cervantes-800 text-rose-100 hover:bg-cervantes-700"
+          isActive
+            ? "bg-white text-brand-900 shadow-md ring-2 ring-amber-400"
+            : "bg-brand-800 text-rose-100 hover:bg-brand-700"
         }`;
         btn.textContent = lvl;
         btn.onclick = () => selectLevel(lvl);
@@ -2268,6 +1793,7 @@
     }
 
     function selectLevel(lvl) {
+      stopAllSpeechAudio();
       currentLevel = lvl;
       currentExerciseIndex = 0;
       pendingPreselectedIndex = null;
@@ -2297,12 +1823,15 @@
       updateLevelMetrics();
     }
 
-    // RESET FUNCTION FOR CURRENT LEVEL
+    // ==========================================
+    // REINICIO INDEPENDIENTE DEL NIVEL
+    // ==========================================
     function confirmResetCurrentLevel() {
-      const confirmed = confirm(`¿Deseas reiniciar todas tus respuestas del Nivel ${currentLevel}? Se restablecerá el contador a 0/20 para que puedas repetirlo desde cero.`);
+      const confirmed = confirm(`¿Deseas reiniciar todas tus respuestas del Nivel ${currentLevel}? Se restablecerán a cero los 20 ejercicios de este nivel.`);
       if (!confirmed) return;
 
-      const exercises = appCurriculumBank[currentLevel] || [];
+      stopAllSpeechAudio();
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       exercises.forEach(item => {
         delete userSessionAnswers[item.id];
       });
@@ -2318,7 +1847,7 @@
     function render20ExerciseGrid() {
       const grid = document.getElementById("exerciseNumberGrid");
       grid.innerHTML = "";
-      const exercises = appCurriculumBank[currentLevel] || [];
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
 
       exercises.forEach((item, index) => {
         const btn = document.createElement("button");
@@ -2329,7 +1858,7 @@
         let btnClasses = "w-full py-2 rounded-xl font-black text-xs border transition flex items-center justify-center shadow-sm ";
 
         if (isCurrent) {
-          btnClasses += "ring-2 ring-cervantes-600 dark:ring-rose-400 ";
+          btnClasses += "ring-2 ring-brand-600 dark:ring-rose-400 ";
         }
 
         if (answerData) {
@@ -2349,6 +1878,7 @@
     }
 
     function jumpToExercise(idx) {
+      stopAllSpeechAudio();
       currentExerciseIndex = idx;
       pendingPreselectedIndex = null;
       render20ExerciseGrid();
@@ -2356,7 +1886,8 @@
     }
 
     function navigateExerciseStep(step) {
-      const exercises = appCurriculumBank[currentLevel] || [];
+      stopAllSpeechAudio();
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       const newIdx = currentExerciseIndex + step;
       if (newIdx >= 0 && newIdx < exercises.length) {
         currentExerciseIndex = newIdx;
@@ -2366,8 +1897,12 @@
       }
     }
 
+
+    // ==========================================
+    // RENDERIZADO DEL REACTIVO ACTUAL Y OPCIONES 1, 2, 3
+    // ==========================================
     function renderActiveExerciseCard() {
-      const exercises = appCurriculumBank[currentLevel] || [];
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       const item = exercises[currentExerciseIndex];
       if (!item) return;
 
@@ -2387,7 +1922,7 @@
       container.innerHTML = "";
       const numbers = ["1", "2", "3"];
 
-      // Configure Confirm/Submit button state
+      // Botón de confirmación manual
       const confirmBtn = document.getElementById("btnConfirmAnswer");
       const hintElem = document.getElementById("selectionStatusHint");
 
@@ -2423,22 +1958,20 @@
           }
           optBtn.disabled = true;
         } else {
-          // If option is currently preselected/focused
           if (pendingPreselectedIndex === optIdx) {
             btnClass += "bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-500 text-slate-900 dark:text-white font-bold ring-2 ring-amber-400/50";
           } else {
-            btnClass += "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700/80 hover:border-cervantes-600 dark:hover:border-rose-500 hover:bg-rose-50/30 text-slate-800 dark:text-slate-200";
+            btnClass += "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700/80 hover:border-brand-600 dark:hover:border-rose-500 hover:bg-rose-50/30 text-slate-800 dark:text-slate-200";
           }
           optBtn.onclick = () => preselectOption(optIdx);
         }
 
         optBtn.className = btnClass;
 
-        // Custom indicator badge for numbered options (1, 2, 3)
         const isPreselected = (pendingPreselectedIndex === optIdx && !answered);
         const badgeClass = isPreselected
           ? "w-7 h-7 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xs shrink-0 ring-2 ring-amber-400"
-          : "w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-cervantes-700 group-hover:text-white flex items-center justify-center font-bold text-xs border border-slate-300 dark:border-slate-700 shrink-0 transition";
+          : "w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-brand-700 group-hover:text-white flex items-center justify-center font-bold text-xs border border-slate-300 dark:border-slate-700 shrink-0 transition";
 
         optBtn.innerHTML = `
           <div class="flex items-center space-x-3 pr-2">
@@ -2449,7 +1982,7 @@
           </div>
           <div class="flex items-center space-x-2 shrink-0">
             ${isPreselected ? '<span class="text-[10px] font-black uppercase tracking-wider text-amber-600 bg-amber-100 dark:bg-amber-950 px-2 py-0.5 rounded-full"><i class="fa-solid fa-hand-pointer mr-1"></i>Preseleccionada</span>' : ''}
-            <button type="button" onclick="event.stopPropagation(); speakText('Opción ${numbers[optIdx]}: ${optText}')" title="Escuchar esta opción en español" class="text-slate-400 hover:text-cervantes-600 dark:hover:text-rose-400 p-1.5 transition">
+            <button type="button" onclick="event.stopPropagation(); speakText('Opción ${numbers[optIdx]}: ${optText}')" title="Escuchar esta opción en español" class="text-slate-400 hover:text-brand-600 dark:hover:text-rose-400 p-1.5 transition">
               <i class="fa-solid fa-volume-low text-xs"></i>
             </button>
           </div>
@@ -2478,9 +2011,9 @@
       }
     }
 
-    // Step 1: Preselect/focus option without sending/evaluating
+    // Preseleccionar opción sin evaluar automáticamente
     function preselectOption(optIndex) {
-      const exercises = appCurriculumBank[currentLevel] || [];
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       const item = exercises[currentExerciseIndex];
       if (!item || userSessionAnswers[item.id]) return;
 
@@ -2490,14 +2023,14 @@
       showToast(`Opción ${numbers[optIndex]} preseleccionada. Pulsa Confirmar para enviar.`, "fa-hand-pointer");
     }
 
-    // Step 2: User explicitly confirms and evaluates their response
+    // Confirmación y calificación manual
     function confirmCurrentSubmission() {
       if (pendingPreselectedIndex === null) {
         showToast("Por favor selecciona una opción antes de responder.", "fa-triangle-exclamation");
         return;
       }
 
-      const exercises = appCurriculumBank[currentLevel] || [];
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       const item = exercises[currentExerciseIndex];
       if (!item || userSessionAnswers[item.id]) return;
 
@@ -2508,7 +2041,7 @@
         timestamp: new Date().toISOString()
       };
 
-      pendingPreselectedIndex = null; // Clear preselection after submission
+      pendingPreselectedIndex = null;
 
       render20ExerciseGrid();
       renderActiveExerciseCard();
@@ -2517,12 +2050,12 @@
       if (isCorrect) {
         showToast("¡Opción correcta!", "fa-circle-check");
       } else {
-        showToast("Opción incorrecta. Revisa el análisis de distractores.", "fa-circle-xmark");
+        showToast("Opción incorrecta. Revisa el análisis pedagógico.", "fa-circle-xmark");
       }
     }
 
     function updateLevelMetrics() {
-      const exercises = appCurriculumBank[currentLevel] || [];
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       let totalAnswered = 0;
       let correct = 0;
       let wrong = 0;
@@ -2545,42 +2078,9 @@
       document.getElementById("levelSuccessPct").textContent = `${pct}%`;
     }
 
-    function setupSpanishVoices() {
-      if (!speechSynth) return;
-      const voices = speechSynth.getVoices();
-      const esVoice = voices.find(v => v.lang.startsWith("es-") || v.lang.includes("es"));
-      if (esVoice) selectedSpanishVoice = esVoice;
-    }
-
-    function speakText(text) {
-      if (!speechSynth) {
-        showToast("Síntesis de voz no soportada en tu navegador.", "fa-volume-xmark");
-        return;
-      }
-      speechSynth.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      if (selectedSpanishVoice) utterance.voice = selectedSpanishVoice;
-      utterance.lang = "es-ES";
-      utterance.rate = 0.95;
-      speechSynth.speak(utterance);
-    }
-
-    function readExerciseSpeech() {
-      const exercises = appCurriculumBank[currentLevel] || [];
-      const item = exercises[currentExerciseIndex];
-      if (!item) return;
-
-      const fullSpeech = `${item.context}. Pregunta: ${item.question}. Opción 1: ${item.options[0]}. Opción 2: ${item.options[1]}. Opción 3: ${item.options[2]}.`;
-      speakText(fullSpeech);
-    }
-
-    function readContextSpeechOnly() {
-      const exercises = appCurriculumBank[currentLevel] || [];
-      const item = exercises[currentExerciseIndex];
-      if (!item) return;
-      speakText(item.context);
-    }
-
+    // ==========================================
+    // RECONOCIMIENTO POR VOZ (STT) AVANZADO
+    // ==========================================
     function initSpeechRecognition() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) return;
@@ -2594,7 +2094,7 @@
         isMicListening = true;
         document.getElementById("micButtonText").textContent = "Escuchando...";
         document.getElementById("voiceMicBtn").classList.add("bg-rose-200", "animate-pulse");
-        document.getElementById("voiceWaveIcon").className = "fa-solid fa-microphone-lines text-rose-600 animate-bounce";
+        document.getElementById("voiceWaveIcon").className = "fa-solid fa-microphone-lines text-brand-600 animate-bounce";
         document.getElementById("voiceLiveTranscript").textContent = "Escuchando tu voz... Habla con claridad.";
         document.getElementById("voiceFeedbackDetail").textContent = "";
         document.getElementById("voiceMatchBadge").classList.add("hidden");
@@ -2613,7 +2113,7 @@
       isMicListening = false;
       document.getElementById("micButtonText").textContent = "Seleccionar por Voz";
       document.getElementById("voiceMicBtn").classList.remove("bg-rose-200", "animate-pulse");
-      document.getElementById("voiceWaveIcon").className = "fa-solid fa-waveform-lines text-cervantes-600";
+      document.getElementById("voiceWaveIcon").className = "fa-solid fa-waveform-lines text-brand-600";
     }
 
     function toggleVoiceRecognition() {
@@ -2628,11 +2128,10 @@
       }
     }
 
-    // Helper: normalize text for phonetic and lexical matching
     function cleanNormText(str) {
       return str.toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accents
-        .replace(/[^\w\s]/gi, ' ') // remove punctuation
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w\s]/gi, ' ')
         .replace(/\s+/g, ' ')
         .trim();
     }
@@ -2642,16 +2141,15 @@
       const detailElem = document.getElementById("voiceFeedbackDetail");
       const badgeElem = document.getElementById("voiceMatchBadge");
 
-      // Display exact verbatim transcription
+      // Muestra exactamente el texto reconocido
       liveElem.innerHTML = `Has dicho: <strong>«${rawTranscript}»</strong>`;
 
       const normSaid = cleanNormText(rawTranscript);
-      const exercises = appCurriculumBank[currentLevel] || [];
+      const exercises = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
       const item = exercises[currentExerciseIndex];
 
       if (!item) return;
 
-      // Check if already answered
       if (userSessionAnswers[item.id]) {
         badgeElem.classList.remove("hidden");
         badgeElem.textContent = "REACTIVO YA RESPONDIDO";
@@ -2663,7 +2161,7 @@
       let matchedIndex = null;
       let matchMethod = "";
 
-      // 1. Detection via option number (1, 2, 3) or ordinal words
+      // Detección por número (1, 2, 3) u ordinal
       if (/\b(opcion\s*1|la\s*1|el\s*1|numero\s*1|uno|primera|primero)\b/.test(normSaid)) {
         matchedIndex = 0;
         matchMethod = "número (Opción 1)";
@@ -2675,7 +2173,7 @@
         matchMethod = "número (Opción 3)";
       }
 
-      // 2. Detection by reading complete option text or key fragments
+      // Detección por lectura de la frase completa o fragmentos clave
       if (matchedIndex === null) {
         const saidTokens = normSaid.split(' ').filter(w => w.length > 2);
         let bestScore = 0;
@@ -2717,12 +2215,11 @@
         const optNumber = matchedIndex + 1;
         badgeElem.textContent = `POSICIONADO EN: OPCIÓN ${optNumber}`;
         badgeElem.className = "text-[10px] px-2 py-0.5 rounded font-black uppercase bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300";
-        detailElem.textContent = `Identificado mediante ${matchMethod}. Se ha preseleccionado la Opción ${optNumber}. Presiona "Confirmar" o la tecla [Enter] para evaluar.`;
+        detailElem.textContent = `Identificado mediante ${matchMethod}. Se ha preseleccionado la Opción ${optNumber}. Presiona "Confirmar" o la tecla [Enter] para responder.`;
 
-        // CRITICAL: Position/preselect option WITHOUT auto-sending or giving enter
+        // SOLO POSICIONA SIN ENVIAR
         preselectOption(matchedIndex);
 
-        // Smooth scroll to highlight the positioned option row
         const targetRow = document.getElementById(`option-row-${matchedIndex}`);
         if (targetRow) {
           targetRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2736,534 +2233,196 @@
       }
     }
 
-    function openStudentHistoryModal(targetStudentUsername = null) {
-      const username = targetStudentUsername || currentStudentUsername;
-      const student = registeredStudents.find(s => s.username === username);
 
-      const label = document.getElementById("historyModalStudentName");
-      const tbody = document.getElementById("studentHistoryTableBody");
-      tbody.innerHTML = "";
-
-      if (!student) {
-        label.textContent = currentStudentName;
-        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">Sin historial disponible.</td></tr>`;
-        document.getElementById("studentHistoryModal").classList.remove("hidden");
-        return;
-      }
-
-      label.textContent = `${student.name} (${student.username})`;
-
-      if (!student.sessions || student.sessions.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-slate-400">Aún no hay evaluaciones archivadas en el expediente. Pulsa 'Guardar Sesión Actual'.</td></tr>`;
-      } else {
-        [...student.sessions].reverse().forEach(sess => {
-          const isApto = sess.verdict === "APTO";
-          const dateFormatted = new Date(sess.date).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
-          const tr = document.createElement("tr");
-          tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition";
-
-          tr.innerHTML = `
-            <td class="py-2.5 px-3 text-slate-600 dark:text-slate-300 font-medium">${dateFormatted}</td>
-            <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 dark:bg-rose-950/60 text-cervantes-700 dark:text-rose-300">${sess.level}</span></td>
-            <td class="py-2.5 px-3 text-center text-slate-600 dark:text-slate-300">${sess.totalAnswered}</td>
-            <td class="py-2.5 px-3 text-center font-bold text-emerald-600">${sess.correct}</td>
-            <td class="py-2.5 px-3 text-center font-bold text-rose-600">${sess.wrong}</td>
-            <td class="py-2.5 px-3 text-center font-bold">${sess.percentage}%</td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="px-2 py-0.5 rounded text-[10px] font-black ${isApto ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}">${sess.verdict}</span>
-            </td>
-            <td class="py-2.5 px-3 text-right">
-              <button onclick="renderHistoricalSessionPdf('${student.username}', '${sess.id}')" class="px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-slate-900 rounded-lg text-[11px] font-bold shadow-sm transition flex items-center gap-1 ml-auto">
-                <i class="fa-solid fa-file-pdf"></i> Ver PDF
-              </button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-
-      document.getElementById("studentHistoryModal").classList.remove("hidden");
-    }
-
-    function closeStudentHistoryModal() {
-      document.getElementById("studentHistoryModal").classList.add("hidden");
-    }
-
-    function saveCurrentLevelSession() {
-      const student = registeredStudents.find(s => s.username === currentStudentUsername);
-      if (!student) {
-        showToast("Debes iniciar sesión con tu cuenta para archivar sesiones.", "fa-user-lock");
-        return;
-      }
-
-      const exercises = appCurriculumBank[currentLevel] || [];
-      let totalAnswered = 0;
-      let correct = 0;
-      let wrong = 0;
-
-      exercises.forEach(item => {
-        const a = userSessionAnswers[item.id];
-        if (a) {
-          totalAnswered++;
-          if (a.correct) correct++; else wrong++;
-        }
-      });
-
-      if (totalAnswered === 0) {
-        showToast("Responde al menos un ejercicio antes de archivar la sesión.", "fa-triangle-exclamation");
-        return;
-      }
-
-      const pct = Math.round((correct / totalAnswered) * 100);
-      const verdict = pct >= 70 ? "APTO" : "NO APTO";
-
-      const sessionRecord = {
-        id: `sess-${Date.now().toString().slice(-5)}`,
-        date: new Date().toISOString(),
-        level: currentLevel,
-        totalAnswered: totalAnswered,
-        correct: correct,
-        wrong: wrong,
-        percentage: pct,
-        verdict: verdict,
-        competence: `Evaluación oficial nivel ${currentLevel}`
-      };
-
-      if (!student.sessions) student.sessions = [];
-      student.sessions.push(sessionRecord);
-      syncStudentsStorage();
-      updateAdminDashboardMetrics();
-
-      openStudentHistoryModal();
-      showToast(`¡Sesión de Nivel ${currentLevel} guardada! (${verdict} - ${pct}%)`, "fa-floppy-disk");
-    }
-
+    // ==========================================
+    // REPORTE DE SESIÓN / DESCARGA PDF CORREGIDO
+    // ==========================================
     function openCurrentEvaluationReport() {
-      document.getElementById("reportCandidateName").textContent = currentStudentName || "Candidato DELE";
+      // Fecha en formato local
       document.getElementById("reportEmissionDate").textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
       document.getElementById("reportActiveLevelBadge").textContent = currentLevel;
+      document.getElementById("reportActiveLevelSubTitle").textContent = currentLevel;
 
-      const exercises = appCurriculumBank[currentLevel] || [];
-      let totalAnswered = 0;
-      let correct = 0;
+      const allLevels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+      const levelMetaInfo = {
+        A1: "Identificación de avisos y fórmulas cotidianas básicas",
+        A2: "Comprensión de correspondencia y relatos en pasado",
+        B1: "Textos descriptivos, de opinión y sintaxis estándar",
+        B2: "Discurso estructurado, argumentación y régimen verbal",
+        C1: "Precisión estilística, locuciones e implicaturas",
+        C2: "Maestría léxica, estilo culto y máxima cohesión"
+      };
 
-      exercises.forEach(item => {
-        const a = userSessionAnswers[item.id];
-        if (a) {
-          totalAnswered++;
-          if (a.correct) correct++;
+      // Cálculos globales sobre los 120 ejercicios
+      let grandTotalExercises = 0;
+      let grandTotalAnswered = 0;
+      let grandTotalCorrect = 0;
+      let grandTotalWrong = 0;
+
+      const levelsTableBody = document.getElementById("reportLevelsTableBody");
+      levelsTableBody.innerHTML = "";
+
+      allLevels.forEach(lvl => {
+        const lvlList = COMPLETE_120_EXERCISES_BANK[lvl] || [];
+        const lvlTotal = lvlList.length; // 20
+        grandTotalExercises += lvlTotal;
+
+        let lvlAnswered = 0;
+        let lvlCorrect = 0;
+        let lvlWrong = 0;
+
+        lvlList.forEach(item => {
+          const rec = userSessionAnswers[item.id];
+          if (rec !== undefined && rec !== null) {
+            lvlAnswered++;
+            if (rec.correct === true) {
+              lvlCorrect++;
+            } else {
+              lvlWrong++;
+            }
+          }
+        });
+
+        grandTotalAnswered += lvlAnswered;
+        grandTotalCorrect += lvlCorrect;
+        grandTotalWrong += lvlWrong;
+
+        // Tasa sobre respondidos (rendimiento) y tasa sobre el total del nivel (20)
+        let rendimientoStr = "0%";
+        let nivelProgressStr = "0%";
+        let dictamenLvl = "SIN INICIAR";
+        let dictamenClass = "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400";
+
+        const pctNivelTotal = Math.round((lvlAnswered / lvlTotal) * 100);
+        nivelProgressStr = `${pctNivelTotal}% (${lvlAnswered}/${lvlTotal})`;
+
+        if (lvlAnswered > 0) {
+          const pctRendimiento = Math.round((lvlCorrect / lvlAnswered) * 100);
+          rendimientoStr = `${pctRendimiento}%`;
+
+          if (pctRendimiento >= 70) {
+            dictamenLvl = "APTO";
+            dictamenClass = "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold";
+          } else {
+            dictamenLvl = "NO APTO";
+            dictamenClass = "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 font-bold";
+          }
         }
+
+        const tr = document.createElement("tr");
+        const isCurrent = (lvl === currentLevel);
+        tr.className = isCurrent ? "bg-rose-50/50 dark:bg-rose-950/20 font-medium" : "hover:bg-slate-50 dark:hover:bg-slate-800/40";
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-extrabold ${isCurrent ? 'text-brand-700 dark:text-rose-400' : 'text-slate-900 dark:text-white'}">
+            ${lvl} ${isCurrent ? '<span class="text-[10px] ml-1 bg-brand-100 dark:bg-brand-900 text-brand-800 dark:text-rose-200 px-1 rounded uppercase">Activo</span>' : ''}
+          </td>
+          <td class="py-2.5 px-3 text-slate-600 dark:text-slate-400">${levelMetaInfo[lvl]}</td>
+          <td class="py-2.5 px-3 text-center font-semibold text-slate-800 dark:text-slate-200">${lvlAnswered} / ${lvlTotal}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-emerald-600">${lvlCorrect}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-rose-600">${lvlWrong}</td>
+          <td class="py-2.5 px-3 text-center font-bold ${lvlAnswered > 0 ? (Math.round((lvlCorrect / lvlAnswered) * 100) >= 70 ? 'text-emerald-600' : 'text-rose-600') : 'text-slate-400'}">
+            ${rendimientoStr}
+          </td>
+          <td class="py-2.5 px-3 text-center text-slate-500 dark:text-slate-400">${nivelProgressStr}</td>
+          <td class="py-2.5 px-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${dictamenClass}">${dictamenLvl}</span>
+          </td>
+        `;
+        levelsTableBody.appendChild(tr);
       });
 
-      const pct = totalAnswered > 0 ? Math.round((correct / totalAnswered) * 100) : 0;
-      document.getElementById("reportMetricAnsweredRatio").textContent = `${totalAnswered} / ${exercises.length}`;
-      document.getElementById("reportMetricSuccessRate").textContent = `${pct}%`;
+      // Actualizar Métricas Globales
+      const globalProgressPct = grandTotalExercises > 0 ? Math.round((grandTotalAnswered / grandTotalExercises) * 100) : 0;
+      const globalSuccessPct = grandTotalAnswered > 0 ? Math.round((grandTotalCorrect / grandTotalAnswered) * 100) : 0;
+
+      document.getElementById("reportMetricGlobalAnswered").textContent = `${grandTotalAnswered} / ${grandTotalExercises}`;
+      document.getElementById("reportMetricGlobalProgressRatio").textContent = `${globalProgressPct}% del banco completado`;
+      document.getElementById("reportMetricGlobalCorrect").textContent = grandTotalCorrect;
+      document.getElementById("reportMetricGlobalWrong").textContent = `${grandTotalWrong} errores`;
+      document.getElementById("reportMetricSuccessRate").textContent = grandTotalAnswered > 0 ? `${globalSuccessPct}%` : `0%`;
 
       const verdictCard = document.getElementById("reportMetricVerdictCard");
       const verdictTitle = document.getElementById("reportMetricVerdictTitle");
       const verdictStatus = document.getElementById("reportMetricVerdictStatus");
+      const verdictThreshold = document.getElementById("reportMetricVerdictThreshold");
       const notes = document.getElementById("reportPedagogicalNotes");
 
-      if (totalAnswered === 0) {
-        verdictCard.className = "p-4 rounded-2xl border border-slate-200 bg-slate-50";
-        verdictTitle.className = "text-xs font-bold uppercase tracking-wider text-slate-400";
+      if (grandTotalAnswered === 0) {
+        verdictCard.className = "p-3.5 rounded-2xl border border-slate-200 bg-slate-50";
+        verdictTitle.className = "text-[11px] font-bold uppercase tracking-wider text-slate-400";
         verdictStatus.textContent = "SIN INICIAR";
-        verdictStatus.className = "text-2xl font-black mt-1 text-slate-400";
-        notes.textContent = "El candidato aún no ha registrado respuestas en el nivel actual.";
-      } else if (pct >= 70) {
-        verdictCard.className = "p-4 rounded-2xl border border-emerald-300 bg-emerald-50";
-        verdictTitle.className = "text-xs font-bold uppercase tracking-wider text-emerald-700";
+        verdictStatus.className = "text-xl font-black mt-1 text-slate-400";
+        verdictThreshold.textContent = "Sin respuestas registradas";
+        notes.textContent = "No se ha registrado ninguna respuesta en la plataforma. Selecciona un nivel y responde a los ejercicios para generar el diagnóstico pedagógico.";
+      } else if (globalSuccessPct >= 70) {
+        verdictCard.className = "p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50";
+        verdictTitle.className = "text-[11px] font-bold uppercase tracking-wider text-emerald-800";
         verdictStatus.textContent = "APTO";
-        verdictStatus.className = "text-2xl font-black mt-1 text-emerald-600";
-        notes.textContent = `El candidato supera con éxito el umbral mínimo oficial del Instituto Cervantes (70%) en el nivel ${currentLevel}.`;
+        verdictStatus.className = "text-xl font-black mt-1 text-emerald-600";
+        verdictThreshold.textContent = `Éxito: ${globalSuccessPct}% (Umbral: \u2265 70%)`;
+        notes.textContent = `¡Excelente rendimiento! Has respondido ${grandTotalAnswered} ejercicios con un porcentaje de aciertos del ${globalSuccessPct}%, superando el umbral de aptitud del 70%. Se evidencia un control sólido de las estructuras gramaticales y competencias pragmáticas evaluadas.`;
       } else {
-        verdictCard.className = "p-4 rounded-2xl border border-rose-300 bg-rose-50";
-        verdictTitle.className = "text-xs font-bold uppercase tracking-wider text-rose-700";
+        verdictCard.className = "p-3.5 rounded-2xl border border-rose-300 bg-rose-50";
+        verdictTitle.className = "text-[11px] font-bold uppercase tracking-wider text-rose-800";
         verdictStatus.textContent = "NO APTO";
-        verdictStatus.className = "text-2xl font-black mt-1 text-rose-600";
-        notes.textContent = `La tasa obtenida (${pct}%) se sitúa por debajo del 70% reglamentario exigido por el Instituto Cervantes.`;
+        verdictStatus.className = "text-xl font-black mt-1 text-rose-600";
+        verdictThreshold.textContent = `Éxito: ${globalSuccessPct}% (Umbral: \u2265 70%)`;
+        notes.textContent = `El porcentaje global obtenido (${globalSuccessPct}%) se sitúa por debajo del 70% requerido para alcanzar la calificación de APTO (${grandTotalCorrect} aciertos y ${grandTotalWrong} errores sobre ${grandTotalAnswered} respondidos). Se aconseja revisar detenidamente las justificaciones de la opción correcta y el análisis de distractores en cada ejercicio.`;
       }
 
-      const tbody = document.getElementById("reportCompetenciesTableBody");
-      tbody.innerHTML = "";
-      const taskGroups = {};
+      // Desglose Específico por Tareas del Nivel Activo
+      const currentLevelList = COMPLETE_120_EXERCISES_BANK[currentLevel] || [];
+      const compTableBody = document.getElementById("reportCompetenciesTableBody");
+      compTableBody.innerHTML = "";
 
-      exercises.forEach(item => {
+      const taskGroups = {};
+      currentLevelList.forEach(item => {
         if (!taskGroups[item.task]) {
-          taskGroups[item.task] = { total: 0, answered: 0, correct: 0, comp: item.comp };
+          taskGroups[item.task] = { total: 0, answered: 0, correct: 0, wrong: 0, comp: item.comp };
         }
         taskGroups[item.task].total++;
         const a = userSessionAnswers[item.id];
-        if (a) {
+        if (a !== undefined && a !== null) {
           taskGroups[item.task].answered++;
-          if (a.correct) taskGroups[item.task].correct++;
+          if (a.correct === true) {
+            taskGroups[item.task].correct++;
+          } else {
+            taskGroups[item.task].wrong++;
+          }
         }
       });
 
       Object.keys(taskGroups).forEach(taskName => {
         const group = taskGroups[taskName];
-        const taskPct = group.answered > 0 ? Math.round((group.correct / group.answered) * 100) : 0;
+        let taskSuccessStr = "0%";
+        if (group.answered > 0) {
+          const taskPct = Math.round((group.correct / group.answered) * 100);
+          taskSuccessStr = `${taskPct}%`;
+        } else {
+          taskSuccessStr = "Sin responder";
+        }
+
         const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/40";
         tr.innerHTML = `
-          <td class="py-2.5 px-3 font-bold text-slate-800">${taskName}</td>
-          <td class="py-2.5 px-3 text-slate-600">${group.comp}</td>
-          <td class="py-2.5 px-3 text-center">${group.answered} / ${group.total}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-800 dark:text-slate-200">${taskName}</td>
+          <td class="py-2.5 px-3 text-slate-600 dark:text-slate-400">${group.comp}</td>
+          <td class="py-2.5 px-3 text-center font-semibold">${group.answered} / ${group.total}</td>
           <td class="py-2.5 px-3 text-center font-bold text-emerald-600">${group.correct}</td>
-          <td class="py-2.5 px-3 text-center font-bold">${taskPct}%</td>
+          <td class="py-2.5 px-3 text-center font-bold text-rose-600">${group.wrong}</td>
+          <td class="py-2.5 px-3 text-center font-bold ${group.answered > 0 ? (Math.round((group.correct / group.answered) * 100) >= 70 ? 'text-emerald-600' : 'text-rose-600') : 'text-slate-400'}">
+            ${taskSuccessStr}
+          </td>
         `;
-        tbody.appendChild(tr);
+        compTableBody.appendChild(tr);
       });
 
-      document.getElementById("printableCertificateModal").classList.remove("hidden");
-    }
-
-    function renderHistoricalSessionPdf(username, sessionId) {
-      const student = registeredStudents.find(s => s.username === username);
-      if (!student) return;
-      const sess = student.sessions.find(s => s.id === sessionId);
-      if (!sess) return;
-
-      document.getElementById("reportCandidateName").textContent = `${student.name} (${student.username})`;
-      document.getElementById("reportEmissionDate").textContent = new Date(sess.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      document.getElementById("reportActiveLevelBadge").textContent = sess.level;
-
-      document.getElementById("reportMetricAnsweredRatio").textContent = `${sess.totalAnswered} / 20`;
-      document.getElementById("reportMetricSuccessRate").textContent = `${sess.percentage}%`;
-
-      const card = document.getElementById("reportMetricVerdictCard");
-      const title = document.getElementById("reportMetricVerdictTitle");
-      const status = document.getElementById("reportMetricVerdictStatus");
-      const notes = document.getElementById("reportPedagogicalNotes");
-
-      if (sess.percentage >= 70) {
-        card.className = "p-4 rounded-2xl border border-emerald-300 bg-emerald-50";
-        title.className = "text-xs font-bold uppercase tracking-wider text-emerald-700";
-        status.textContent = "APTO";
-        status.className = "text-2xl font-black mt-1 text-emerald-600";
-        notes.textContent = `Sesión archivada el ${new Date(sess.date).toLocaleString('es-ES')}. El alumno superó satisfactoriamente la prueba de nivel ${sess.level} con ${sess.percentage}% de efectividad.`;
-      } else {
-        card.className = "p-4 rounded-2xl border border-rose-300 bg-rose-50";
-        title.className = "text-xs font-bold uppercase tracking-wider text-rose-700";
-        status.textContent = "NO APTO";
-        status.className = "text-2xl font-black mt-1 text-rose-600";
-        notes.textContent = `Sesión archivada el ${new Date(sess.date).toLocaleString('es-ES')}. Con un ${sess.percentage}%, el rendimiento no alcanza el estándar del 70%.`;
-      }
-
-      const tbody = document.getElementById("reportCompetenciesTableBody");
-      tbody.innerHTML = `
-        <tr>
-          <td class="py-2.5 px-3 font-bold text-slate-800">Pruebas Integradas DELE</td>
-          <td class="py-2.5 px-3 text-slate-600">${sess.competence || 'Evaluación oficial de destrezas'}</td>
-          <td class="py-2.5 px-3 text-center">${sess.totalAnswered} / 20</td>
-          <td class="py-2.5 px-3 text-center font-bold text-emerald-600">${sess.correct}</td>
-          <td class="py-2.5 px-3 text-center font-bold">${sess.percentage}%</td>
-        </tr>
-      `;
-
-      closeStudentHistoryModal();
-      document.getElementById("printableCertificateModal").classList.remove("hidden");
+      document.getElementById("printableReportModal").classList.remove("hidden");
     }
 
     function closeEvaluationReportModal() {
-      document.getElementById("printableCertificateModal").classList.add("hidden");
-    }
-
-    function switchAdminSubTab(tab) {
-      const subStudents = document.getElementById("adminSubTabStudents");
-      const subExercises = document.getElementById("adminSubTabExercises");
-      const btnStudents = document.getElementById("adminTabStudentsBtn");
-      const btnExercises = document.getElementById("adminTabExercisesBtn");
-
-      if (tab === "students") {
-        subStudents.classList.remove("hidden");
-        subExercises.classList.add("hidden");
-        btnStudents.className = "pb-3 px-2 border-b-2 border-cervantes-700 text-cervantes-700 dark:text-rose-400 flex items-center gap-2 font-bold";
-        btnExercises.className = "pb-3 px-2 border-b-2 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center gap-2 font-bold";
-        renderAdminStudentsTable();
-      } else {
-        subStudents.classList.add("hidden");
-        subExercises.classList.remove("hidden");
-        btnExercises.className = "pb-3 px-2 border-b-2 border-cervantes-700 text-cervantes-700 dark:text-rose-400 flex items-center gap-2 font-bold";
-        btnStudents.className = "pb-3 px-2 border-b-2 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center gap-2 font-bold";
-        renderAdminItemsTable();
-      }
-    }
-
-    function renderAdminStudentsTable() {
-      const tbody = document.getElementById("adminStudentsTableBody");
-      tbody.innerHTML = "";
-
-      if (registeredStudents.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">No hay alumnos registrados.</td></tr>`;
-        return;
-      }
-
-      registeredStudents.forEach(student => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition";
-
-        const count = student.sessions ? student.sessions.length : 0;
-        let lastSuccess = "—";
-        let lastVerdict = `<span class="text-slate-400 text-[11px]">Sin intentos</span>`;
-
-        if (count > 0) {
-          const lastSess = student.sessions[student.sessions.length - 1];
-          lastSuccess = `${lastSess.percentage}% (${lastSess.level})`;
-          const isApto = lastSess.verdict === "APTO";
-          lastVerdict = `<span class="px-2 py-0.5 rounded text-[10px] font-black ${isApto ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}">${lastSess.verdict}</span>`;
-        }
-
-        tr.innerHTML = `
-          <td class="py-3 px-3">
-            <div class="font-bold text-slate-900 dark:text-white">${student.name}</div>
-            <div class="text-[10px] text-slate-400">Inscrito: ${new Date(student.registeredAt).toLocaleDateString()}</div>
-          </td>
-          <td class="py-3 px-3 text-slate-600 dark:text-slate-300 font-mono">${student.username}</td>
-          <td class="py-3 px-3 text-center font-bold">${count}</td>
-          <td class="py-3 px-3 text-center font-semibold">${lastSuccess}</td>
-          <td class="py-3 px-3 text-center">${lastVerdict}</td>
-          <td class="py-3 px-3 text-right space-x-1 shrink-0">
-            <button onclick="openStudentHistoryModal('${student.username}')" class="px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-slate-900 rounded-lg text-[11px] font-bold shadow-sm transition inline-flex items-center gap-1">
-              <i class="fa-solid fa-clock-rotate-left"></i> Historial
-            </button>
-            <button onclick="openRegisterStudentAdminModal('${student.id}')" class="p-1.5 text-slate-500 hover:text-cervantes-600">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <button onclick="deleteStudentAdmin('${student.id}')" class="p-1.5 text-slate-500 hover:text-rose-600">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderAdminItemsTable() {
-      const lvlFilter = document.getElementById("adminLevelFilterSelect").value;
-      const tbody = document.getElementById("adminExercisesTableBody");
-      tbody.innerHTML = "";
-
-      let items = [];
-      if (lvlFilter === "ALL") {
-        Object.keys(appCurriculumBank).forEach(l => {
-          appCurriculumBank[l].forEach((it, idx) => items.push({ ...it, levelKey: l, rawIndex: idx }));
-        });
-      } else {
-        (appCurriculumBank[lvlFilter] || []).forEach((it, idx) => items.push({ ...it, levelKey: lvlFilter, rawIndex: idx }));
-      }
-
-      items.forEach(it => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition";
-        const numbers = ["1", "2", "3"];
-
-        tr.innerHTML = `
-          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 dark:bg-rose-950 text-cervantes-700 dark:text-rose-300">${it.levelKey}</span></td>
-          <td class="py-3 px-3 font-semibold text-slate-700 dark:text-slate-300 max-w-[120px] truncate">${it.task}</td>
-          <td class="py-3 px-3">
-            <div class="font-bold text-slate-900 dark:text-white truncate max-w-md">${it.question}</div>
-            <div class="text-[11px] text-slate-400 truncate max-w-md italic">${it.context}</div>
-          </td>
-          <td class="py-3 px-3 text-center">
-            <span class="px-2 py-0.5 rounded font-black text-xs bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-              Opción ${numbers[it.correct]}
-            </span>
-          </td>
-          <td class="py-3 px-3 text-right space-x-1 shrink-0">
-            <button onclick="openExerciseModal('${it.levelKey}', ${it.rawIndex})" class="p-1.5 text-blue-600 hover:text-blue-800">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <button onclick="deleteExerciseAdmin('${it.levelKey}', ${it.rawIndex})" class="p-1.5 text-rose-600 hover:text-rose-800">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function openExerciseModal(levelKey = null, itemIndex = null) {
-      const modal = document.getElementById("exerciseEditModal");
-      const title = document.getElementById("exerciseEditModalTitle");
-      const form = document.getElementById("exerciseForm");
-      form.reset();
-
-      if (levelKey !== null && itemIndex !== null) {
-        const item = appCurriculumBank[levelKey][itemIndex];
-        title.textContent = `Editar Ejercicio (${levelKey} - Ítem ${itemIndex + 1})`;
-        document.getElementById("editItemLevel").value = levelKey;
-        document.getElementById("editItemIndex").value = itemIndex;
-
-        document.getElementById("editLevelSelect").value = levelKey;
-        document.getElementById("editTaskName").value = item.task;
-        document.getElementById("editContext").value = item.context;
-        document.getElementById("editQuestion").value = item.question;
-        document.getElementById("editOpt1").value = item.options[0];
-        document.getElementById("editOpt2").value = item.options[1];
-        document.getElementById("editOpt3").value = item.options[2];
-        document.getElementById("editCorrectIndex").value = item.correct;
-        document.getElementById("editExplCorrect").value = item.expl_correct;
-        document.getElementById("editExplDistractors").value = item.expl_distractors;
-        document.getElementById("editExplGrammar").value = item.expl_grammar;
-      } else {
-        title.textContent = "Crear Nuevo Ejercicio Oficial DELE";
-        document.getElementById("editItemLevel").value = "";
-        document.getElementById("editItemIndex").value = "";
-      }
-
-      modal.classList.remove("hidden");
-    }
-
-    function closeExerciseModal() {
-      document.getElementById("exerciseEditModal").classList.add("hidden");
-    }
-
-    function handleSaveExerciseSubmit(event) {
-      event.preventDefault();
-      const level = document.getElementById("editLevelSelect").value;
-      const targetLevel = document.getElementById("editItemLevel").value;
-      const targetIndex = document.getElementById("editItemIndex").value;
-
-      const newItem = {
-        id: `${level}-${Date.now().toString().slice(-4)}`,
-        task: document.getElementById("editTaskName").value.trim(),
-        comp: "Comprensión de lectura y lengua",
-        context: document.getElementById("editContext").value.trim(),
-        question: document.getElementById("editQuestion").value.trim(),
-        options: [
-          document.getElementById("editOpt1").value.trim(),
-          document.getElementById("editOpt2").value.trim(),
-          document.getElementById("editOpt3").value.trim()
-        ],
-        correct: parseInt(document.getElementById("editCorrectIndex").value),
-        expl_correct: document.getElementById("editExplCorrect").value.trim(),
-        expl_distractors: document.getElementById("editExplDistractors").value.trim(),
-        expl_grammar: document.getElementById("editExplGrammar").value.trim()
-      };
-
-      if (targetLevel && targetIndex !== "") {
-        appCurriculumBank[targetLevel][parseInt(targetIndex)] = newItem;
-        showToast("Ejercicio actualizado con éxito.", "fa-check");
-      } else {
-        if (!appCurriculumBank[level]) appCurriculumBank[level] = [];
-        appCurriculumBank[level].push(newItem);
-        showToast(`Ejercicio añadido al Nivel ${level}.`, "fa-plus");
-      }
-
-      syncDatabaseStorage();
-      closeExerciseModal();
-      renderAdminItemsTable();
-      updateAdminDashboardMetrics();
-    }
-
-    function deleteExerciseAdmin(levelKey, itemIndex) {
-      if (!confirm(`¿Eliminar de forma permanente este ejercicio del Nivel ${levelKey}?`)) return;
-      appCurriculumBank[levelKey].splice(itemIndex, 1);
-      syncDatabaseStorage();
-      renderAdminItemsTable();
-      updateAdminDashboardMetrics();
-      showToast("Ejercicio eliminado del banco.", "fa-trash");
-    }
-
-    function restoreOfficialCurriculumBank() {
-      if (!confirm("¿Deseas restablecer todos los niveles a los 120 ejercicios oficiales del Instituto Cervantes? Se perderán las modificaciones manuales.")) return;
-      appCurriculumBank = JSON.parse(JSON.stringify(OFFICIAL_120_EXERCISES_BANK));
-      syncDatabaseStorage();
-      renderAdminItemsTable();
-      updateAdminDashboardMetrics();
-      loadLevelWorkspace(currentLevel);
-      showToast("Banco oficial de 120 ejercicios restablecido.", "fa-rotate-left");
-    }
-
-    function openRegisterStudentAdminModal(studentId = null) {
-      const modal = document.getElementById("adminStudentModal");
-      const title = document.getElementById("adminStudentModalTitle");
-      const form = document.getElementById("adminStudentForm");
-      form.reset();
-
-      if (studentId) {
-        const student = registeredStudents.find(s => s.id === studentId);
-        if (!student) return;
-        title.textContent = "Editar Alumno";
-        document.getElementById("adminStudentEditId").value = student.id;
-        document.getElementById("adminStudentName").value = student.name;
-        document.getElementById("adminStudentUsername").value = student.username;
-        document.getElementById("adminStudentPassword").value = student.password;
-      } else {
-        title.textContent = "Matricular Nuevo Alumno";
-        document.getElementById("adminStudentEditId").value = "";
-      }
-
-      modal.classList.remove("hidden");
-    }
-
-    function closeAdminStudentModal() {
-      document.getElementById("adminStudentModal").classList.add("hidden");
-    }
-
-    function handleSaveStudentAdmin(event) {
-      event.preventDefault();
-      const id = document.getElementById("adminStudentEditId").value;
-      const name = document.getElementById("adminStudentName").value.trim();
-      const username = document.getElementById("adminStudentUsername").value.trim();
-      const password = document.getElementById("adminStudentPassword").value;
-
-      if (id) {
-        const student = registeredStudents.find(s => s.id === id);
-        if (student) {
-          student.name = name;
-          student.username = username;
-          student.password = password;
-          showToast(`Alumno ${name} actualizado.`, "fa-check");
-        }
-      } else {
-        const newStudent = {
-          id: `std-${Date.now().toString().slice(-4)}`,
-          name: name,
-          username: username,
-          password: password,
-          registeredAt: new Date().toISOString(),
-          sessions: []
-        };
-        registeredStudents.push(newStudent);
-        showToast(`Alumno ${name} matriculado.`, "fa-user-plus");
-      }
-
-      syncStudentsStorage();
-      closeAdminStudentModal();
-      renderAdminStudentsTable();
-      updateAdminDashboardMetrics();
-    }
-
-    function deleteStudentAdmin(studentId) {
-      const student = registeredStudents.find(s => s.id === studentId);
-      if (!student) return;
-      if (!confirm(`¿Eliminar la ficha y todo el historial de ${student.name}?`)) return;
-
-      const idx = registeredStudents.findIndex(s => s.id === studentId);
-      if (idx !== -1) {
-        registeredStudents.splice(idx, 1);
-        syncStudentsStorage();
-        renderAdminStudentsTable();
-        updateAdminDashboardMetrics();
-        showToast("Ficha de alumno eliminada.", "fa-trash");
-      }
-    }
-
-    function updateAdminDashboardMetrics() {
-      let totalItems = 0;
-      Object.keys(appCurriculumBank).forEach(l => {
-        totalItems += appCurriculumBank[l].length;
-      });
-
-      let totalSessions = 0;
-      registeredStudents.forEach(st => {
-        if (st.sessions) totalSessions += st.sessions.length;
-      });
-
-      document.getElementById("kpiTotalItems").textContent = totalItems;
-      document.getElementById("kpiRegisteredStudents").textContent = registeredStudents.length;
-      document.getElementById("kpiArchivedSessions").textContent = totalSessions;
+      document.getElementById("printableReportModal").classList.add("hidden");
     }
 
     let toastTimeout = null;
